@@ -521,6 +521,7 @@ extern "C" {
 #define P2_50       8.881784197001252E-16 /* 2^-50 */
 #define P2_55       2.775557561562891E-17 /* 2^-55 */
 
+#if !defined(NO_THREADS_API)
 #ifdef WIN32
 #define thread_t    HANDLE
 #define lock_t      CRITICAL_SECTION
@@ -539,6 +540,7 @@ extern "C" {
 #define unlock(f)   pthread_mutex_unlock(f)
 #endif
 #define FILEPATHSEP '/'
+#endif
 #endif
 
 /* type definitions ----------------------------------------------------------*/
@@ -1221,7 +1223,9 @@ typedef struct {        /* stream type */
     uint32_t tick_o;    /* output tick */
     uint32_t tact;      /* active tick */
     uint32_t inbt,outbt; /* input/output bytes at tick */
+#ifndef NO_THREADS_API
     lock_t lock;        /* lock flag */
+#endif
     void *port;         /* type dependent port control struct */
     char path[MAXSTRPATH]; /* stream path */
     char msg [MAXSTRMSG];  /* stream message */
@@ -1256,8 +1260,10 @@ typedef struct {        /* stream server type */
     stream_t stream[16]; /* input/output streams */
     stream_t strlog[16]; /* return log streams */
     strconv_t *conv[16]; /* stream converter */
+#ifndef NO_THREADS_API
     thread_t thread;    /* server thread */
     lock_t lock;        /* lock flag */
+#endif
 } strsvr_t;
 
 typedef struct {        /* RTK server type */
@@ -1291,7 +1297,10 @@ typedef struct {        /* RTK server type */
     stream_t stream[8]; /* streams {rov,base,corr,sol1,sol2,logr,logb,logc} */
     stream_t *moni;     /* monitor stream */
     uint32_t tick;      /* start tick */
+#ifndef NO_THREADS_API
     thread_t thread;    /* server thread */
+    lock_t lock;        /* lock flag */
+#endif
     int cputime;        /* CPU time (ms) for a processing cycle */
     int prcout;         /* missing observation data count */
     int nave;           /* number of averaging base pos */
@@ -1299,7 +1308,6 @@ typedef struct {        /* RTK server type */
     char cmds_periodic[3][MAXRCVCMD]; /* periodic commands */
     char cmd_reset[MAXRCVCMD]; /* reset command */
     double bl_reset;    /* baseline length to reset (km) */
-    lock_t lock;        /* lock flag */
 } rtksvr_t;
 
 typedef struct {        /* GIS data point type */
