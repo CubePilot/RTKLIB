@@ -55,6 +55,13 @@ extern "C" {
 #define EXPORT
 #endif
 
+#define trace(loglevel, fmt, ...) do {} while(0)
+void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
+
+#define rtklib_debug(loglevel, fmt, ...) do { \
+    can_log_level_printf(loglevel, fmt, ##__VA_ARGS__); \
+} while (0)
+
 /* constants -----------------------------------------------------------------*/
 
 #define VER_RTKLIB  "demo5"             /* library version */
@@ -1458,7 +1465,7 @@ EXPORT int  geterp (const erp_t *erp, gtime_t time, double *val);
 EXPORT void traceopen(const char *file);
 EXPORT void traceclose(void);
 EXPORT void tracelevel(int level);
-EXPORT void trace    (int level, const char *format, ...);
+// EXPORT void trace    (int level, const char *format, ...);
 EXPORT void tracet   (int level, const char *format, ...);
 EXPORT void tracemat (int level, const double *A, int n, int m, int p, int q);
 EXPORT void traceobs (int level, const obsd_t *obs, int n);
