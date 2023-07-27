@@ -1835,6 +1835,10 @@ extern int showmsg(const char *format,...);
 extern void settspan(gtime_t ts, gtime_t te);
 extern void settime(gtime_t time);
 
+#ifdef CUSTOM_TIME_API
+EXPORT gtime_t get_curr_time(void);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

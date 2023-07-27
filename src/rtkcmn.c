@@ -147,7 +147,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <errno.h>
-#ifndef WIN32
+#if !defined(WIN32) && !defined(NO_FS_PLATFORM)
 #include <dirent.h>
 #include <time.h>
 #include <sys/time.h>
@@ -1597,17 +1597,20 @@ extern double timediff(gtime_t t1, gtime_t t2)
 * return : current time in utc
 *-----------------------------------------------------------------------------*/
 static double timeoffset_=0.0;        /* time offset (s) */
-
 extern gtime_t timeget(void)
 {
     gtime_t time;
+#if !defined(CUSTOM_TIME_API)
     double ep[6]={0};
+#endif
 #ifdef WIN32
     SYSTEMTIME ts;
     
     GetSystemTime(&ts); /* utc */
     ep[0]=ts.wYear; ep[1]=ts.wMonth;  ep[2]=ts.wDay;
     ep[3]=ts.wHour; ep[4]=ts.wMinute; ep[5]=ts.wSecond+ts.wMilliseconds*1E-3;
+#elif defined(CUSTOM_TIME_API)
+    time = get_curr_time();
 #else
     struct timeval tv;
     struct tm *tt;
@@ -1617,8 +1620,9 @@ extern gtime_t timeget(void)
         ep[3]=tt->tm_hour; ep[4]=tt->tm_min; ep[5]=tt->tm_sec+tv.tv_usec*1E-6;
     }
 #endif
+#if !defined(CUSTOM_TIME_API)
     time=epoch2time(ep);
-    
+#endif
 #ifdef CPUTIME_IN_GPST /* cputime operated in gpst */
     time=gpst2utc(time);
 #endif
@@ -1862,6 +1866,7 @@ extern int adjgpsweek(int week)
 * args   : none
 * return : current tick in ms
 *-----------------------------------------------------------------------------*/
+#ifndef CUSTOM_TIME_API
 extern uint32_t tickget(void)
 {
 #ifdef WIN32
@@ -1885,11 +1890,13 @@ extern uint32_t tickget(void)
 #endif
 #endif /* WIN32 */
 }
+#endif
 /* sleep ms --------------------------------------------------------------------
 * sleep ms
 * args   : int   ms         I   miliseconds to sleep (<0:no sleep)
 * return : none
 *-----------------------------------------------------------------------------*/
+#ifndef CUSTOM_TIME_API
 extern void sleepms(int ms)
 {
 #ifdef WIN32
@@ -1902,6 +1909,7 @@ extern void sleepms(int ms)
     nanosleep(&ts,NULL);
 #endif
 }
+#endif
 /* convert degree to deg-min-sec -----------------------------------------------
 * convert degree to degree-minute-second
 * args   : double deg       I   degree
@@ -3284,6 +3292,7 @@ extern int execcmd(const char *cmd)
 * return : number of expanded file paths
 * notes  : the order of expanded files is alphabetical order
 *-----------------------------------------------------------------------------*/
+#ifndef NO_FS_PLATFORM
 extern int expath(const char *path, char *paths[], int nmax)
 {
     int i,j,n=0;
@@ -3533,6 +3542,7 @@ extern int reppaths(const char *path, char *rpath[], int nmax, gtime_t ts,
     for (i=0;i<n;i++) trace(3,"reppaths: rpath=%s\n",rpath[i]);
     return n;
 }
+#endif //NO_FS_PLATFORM
 /* geometric distance ----------------------------------------------------------
 * compute geometric distance and receiver-to-satellite unit vector
 * args   : double *rs       I   satellilte position (ecef at transmission) (m)

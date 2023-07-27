@@ -299,69 +299,69 @@ extern int rtkoutstat(rtk_t *rtk, char *buff)
     return (int)(p-buff);
 }
 /* swap solution status file -------------------------------------------------*/
-static void swapsolstat(void)
-{
-    gtime_t time=utc2gpst(timeget());
-    char path[1024];
+// static void swapsolstat(void)
+// {
+//     gtime_t time=utc2gpst(timeget());
+//     char path[1024];
     
-    if ((int)(time2gpst(time     ,NULL)/INT_SWAP_STAT)==
-        (int)(time2gpst(time_stat,NULL)/INT_SWAP_STAT)) {
-        return;
-    }
-    time_stat=time;
+//     if ((int)(time2gpst(time     ,NULL)/INT_SWAP_STAT)==
+//         (int)(time2gpst(time_stat,NULL)/INT_SWAP_STAT)) {
+//         return;
+//     }
+//     time_stat=time;
     
-    if (!reppath(file_stat,path,time,"","")) {
-        return;
-    }
-    if (fp_stat) fclose(fp_stat);
+//     if (!reppath(file_stat,path,time,"","")) {
+//         return;
+//     }
+//     if (fp_stat) fclose(fp_stat);
     
-    if (!(fp_stat=fopen(path,"w"))) {
-        trace(2,"swapsolstat: file open error path=%s\n",path);
-        return;
-    }
-    trace(3,"swapsolstat: path=%s\n",path);
-}
+//     if (!(fp_stat=fopen(path,"w"))) {
+//         trace(2,"swapsolstat: file open error path=%s\n",path);
+//         return;
+//     }
+//     trace(3,"swapsolstat: path=%s\n",path);
+// }
 /* output solution status ----------------------------------------------------*/
-static void outsolstat(rtk_t *rtk,const nav_t *nav)
-{
-    ssat_t *ssat;
-    double tow;
-    char buff[MAXSOLMSG+1],id[32];
-    int i,j,k,n,week,nfreq,nf=NF(&rtk->opt);
+// static void outsolstat(rtk_t *rtk,const nav_t *nav)
+// {
+//     ssat_t *ssat;
+//     double tow;
+//     char buff[MAXSOLMSG+1],id[32];
+//     int i,j,k,n,week,nfreq,nf=NF(&rtk->opt);
     
-    if (statlevel<=0||!fp_stat||!rtk->sol.stat) return;
+//     if (statlevel<=0||!fp_stat||!rtk->sol.stat) return;
     
-    trace(3,"outsolstat:\n");
+//     trace(3,"outsolstat:\n");
     
-    /* swap solution status file */
-    swapsolstat();
+//     /* swap solution status file */
+//     swapsolstat();
     
-    /* write solution status */
-    n=rtkoutstat(rtk,buff); buff[n]='\0';
+//     /* write solution status */
+//     n=rtkoutstat(rtk,buff); buff[n]='\0';
     
-    fputs(buff,fp_stat);
+//     fputs(buff,fp_stat);
     
-    if (rtk->sol.stat==SOLQ_NONE||statlevel<=1) return;
+//     if (rtk->sol.stat==SOLQ_NONE||statlevel<=1) return;
     
-    tow=time2gpst(rtk->sol.time,&week);
-    nfreq=rtk->opt.mode>=PMODE_DGPS?nf:1;
+//     tow=time2gpst(rtk->sol.time,&week);
+//     nfreq=rtk->opt.mode>=PMODE_DGPS?nf:1;
     
-    /* write residuals and status */
-    for (i=0;i<MAXSAT;i++) {
-        ssat=rtk->ssat+i;
-        if (!ssat->vs) continue;
-        satno2id(i+1,id);
-        for (j=0;j<nfreq;j++) {
-            k=IB(i+1,j,&rtk->opt);
-            fprintf(fp_stat,"$SAT,%d,%.3f,%s,%d,%.1f,%.1f,%.4f,%.4f,%d,%.0f,%d,%d,%d,%d,%d,%d,%.2f,%.6f,%.5f\n",
-                    week,tow,id,j+1,ssat->azel[0]*R2D,ssat->azel[1]*R2D,
-                    ssat->resp[j],ssat->resc[j],ssat->vsat[j],ssat->snr_rover[j]*SNR_UNIT,
-                    ssat->fix[j],ssat->slip[j]&3,ssat->lock[j],ssat->outc[j],
-                    ssat->slipc[j],ssat->rejc[j],rtk->x[k],
-                    rtk->P[k+k*rtk->nx],ssat->icbias[j]);
-        }
-    }
-}
+//     /* write residuals and status */
+//     for (i=0;i<MAXSAT;i++) {
+//         ssat=rtk->ssat+i;
+//         if (!ssat->vs) continue;
+//         satno2id(i+1,id);
+//         for (j=0;j<nfreq;j++) {
+//             k=IB(i+1,j,&rtk->opt);
+//             fprintf(fp_stat,"$SAT,%d,%.3f,%s,%d,%.1f,%.1f,%.4f,%.4f,%d,%.0f,%d,%d,%d,%d,%d,%d,%.2f,%.6f,%.5f\n",
+//                     week,tow,id,j+1,ssat->azel[0]*R2D,ssat->azel[1]*R2D,
+//                     ssat->resp[j],ssat->resc[j],ssat->vsat[j],ssat->snr_rover[j]*SNR_UNIT,
+//                     ssat->fix[j],ssat->slip[j]&3,ssat->lock[j],ssat->outc[j],
+//                     ssat->slipc[j],ssat->rejc[j],rtk->x[k],
+//                     rtk->P[k+k*rtk->nx],ssat->icbias[j]);
+//         }
+//     }
+// }
 /* save error message --------------------------------------------------------*/
 static void errmsg(rtk_t *rtk, const char *format, ...)
 {
@@ -2295,10 +2295,10 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
         if (!pntpos(obs,nu,nav,&rtk->opt,&rtk->sol,NULL,rtk->ssat,msg)) {
             errmsg(rtk,"point pos error (%s)\n",msg);
 
-            if (!rtk->opt.dynamics) {
-                outsolstat(rtk,nav);
-                return 0;
-            }
+            // if (!rtk->opt.dynamics) {
+            //     outsolstat(rtk,nav);
+            //     return 0;
+            // }
         }
     } else rtk->sol.time=obs[0].time;
     if (time.time!=0) rtk->tt=timediff(rtk->sol.time,time);
@@ -2316,7 +2316,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
 
     /* single point positioning */
     if (opt->mode==PMODE_SINGLE) {
-        outsolstat(rtk,nav);
+        // outsolstat(rtk,nav);
         return 1;
     }
     /* suppress output of single solution */
@@ -2326,13 +2326,13 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
     /* precise point positioning */
     if (opt->mode>=PMODE_PPP_KINEMA) {
         pppos(rtk,obs,nu,nav);
-        outsolstat(rtk,nav);
+        // outsolstat(rtk,nav);
         return 1;
     }
     /* check number of data of base station and age of differential */
     if (nr==0) {
         errmsg(rtk,"no base station observation data for rtk\n");
-        outsolstat(rtk,nav);
+        // outsolstat(rtk,nav);
         return 1;
     }
     if (opt->mode==PMODE_MOVEB) { /*  moving baseline */
@@ -2373,13 +2373,13 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
         
         if (fabs(rtk->sol.age)>opt->maxtdiff) {
             errmsg(rtk,"age of differential error (age=%.1f)\n",rtk->sol.age);
-            outsolstat(rtk,nav);
+            // outsolstat(rtk,nav);
             return 1;
         }
     }
     /* relative potitioning */
     relpos(rtk,obs,nu,nr,nav);
-    outsolstat(rtk,nav);
+    // outsolstat(rtk,nav);
     
     return 1;
 }
