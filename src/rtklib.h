@@ -216,7 +216,7 @@ extern "C" {
 
 #define MINPRNSBS   120                 /* min satellite PRN number of SBAS */
 #define MAXPRNSBS   158                 /* max satellite PRN number of SBAS */
-#define NSATSBS     (MAXPRNSBS-MINPRNSBS+1) /* number of SBAS satellites */
+#define NSATSBS     0//(MAXPRNSBS-MINPRNSBS+1) /* number of SBAS satellites */
 
 #define MAXSAT      (NSATGPS+NSATGLO+NSATGAL+NSATQZS+NSATCMP+NSATIRN+NSATSBS+NSATLEO)
                                         /* max satellite number (1 to MAXSAT) */
@@ -785,32 +785,32 @@ typedef struct {        /* SBAS ionospheric corrections type */
     sbsigp_t igp[MAXNIGP]; /* ionospheric correction */
 } sbsion_t;
 
-typedef struct {        /* DGPS/GNSS correction type */
-    gtime_t t0;         /* correction time */
-    double prc;         /* pseudorange correction (PRC) (m) */
-    double rrc;         /* range rate correction (RRC) (m/s) */
-    int iod;            /* issue of data (IOD) */
-    double udre;        /* UDRE */
-} dgps_t;
+// typedef struct {        /* DGPS/GNSS correction type */
+//     gtime_t t0;         /* correction time */
+//     double prc;         /* pseudorange correction (PRC) (m) */
+//     double rrc;         /* range rate correction (RRC) (m/s) */
+//     int iod;            /* issue of data (IOD) */
+//     double udre;        /* UDRE */
+// } dgps_t;
 
-typedef struct {        /* SSR correction type */
-    gtime_t t0[6];      /* epoch time (GPST) {eph,clk,hrclk,ura,bias,pbias} */
-    double udi[6];      /* SSR update interval (s) */
-    int iod[6];         /* iod ssr {eph,clk,hrclk,ura,bias,pbias} */
-    int iode;           /* issue of data */
-    int iodcrc;         /* issue of data crc for beidou/sbas */
-    int ura;            /* URA indicator */
-    int refd;           /* sat ref datum (0:ITRF,1:regional) */
-    double deph [3];    /* delta orbit {radial,along,cross} (m) */
-    double ddeph[3];    /* dot delta orbit {radial,along,cross} (m/s) */
-    double dclk [3];    /* delta clock {c0,c1,c2} (m,m/s,m/s^2) */
-    double hrclk;       /* high-rate clock corection (m) */
-    float  cbias[MAXCODE]; /* code biases (m) */
-    double pbias[MAXCODE]; /* phase biases (m) */
-    float  stdpb[MAXCODE]; /* std-dev of phase biases (m) */
-    double yaw_ang,yaw_rate; /* yaw angle and yaw rate (deg,deg/s) */
-    uint8_t update;     /* update flag (0:no update,1:update) */
-} ssr_t;
+// typedef struct {        /* SSR correction type */
+//     gtime_t t0[6];      /* epoch time (GPST) {eph,clk,hrclk,ura,bias,pbias} */
+//     double udi[6];      /* SSR update interval (s) */
+//     int iod[6];         /* iod ssr {eph,clk,hrclk,ura,bias,pbias} */
+//     int iode;           /* issue of data */
+//     int iodcrc;         /* issue of data crc for beidou/sbas */
+//     int ura;            /* URA indicator */
+//     int refd;           /* sat ref datum (0:ITRF,1:regional) */
+//     double deph [3];    /* delta orbit {radial,along,cross} (m) */
+//     double ddeph[3];    /* dot delta orbit {radial,along,cross} (m/s) */
+//     double dclk [3];    /* delta clock {c0,c1,c2} (m,m/s,m/s^2) */
+//     double hrclk;       /* high-rate clock corection (m) */
+//     float  cbias[MAXCODE]; /* code biases (m) */
+//     double pbias[MAXCODE]; /* phase biases (m) */
+//     float  stdpb[MAXCODE]; /* std-dev of phase biases (m) */
+//     double yaw_ang,yaw_rate; /* yaw angle and yaw rate (deg,deg/s) */
+//     uint8_t update;     /* update flag (0:no update,1:update) */
+// } ssr_t;
 
 typedef struct {        /* navigation data type */
     int n,nmax;         /* number of broadcast ephemeris */
@@ -844,10 +844,10 @@ typedef struct {        /* navigation data type */
     double cbias[MAXSAT][3]; /* satellite DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */
     double rbias[MAXRCV][2][3]; /* receiver DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */
     pcv_t pcvs[MAXSAT]; /* satellite antenna pcv */
-    sbssat_t sbssat;    /* SBAS satellite corrections */
-    sbsion_t sbsion[MAXBAND+1]; /* SBAS ionosphere corrections */
-    dgps_t dgps[MAXSAT]; /* DGPS corrections */
-    ssr_t ssr[MAXSAT];  /* SSR corrections */
+    // sbssat_t sbssat;    /* SBAS satellite corrections */
+    // sbsion_t sbsion[MAXBAND+1]; /* SBAS ionosphere corrections */
+    // dgps_t dgps[MAXSAT]; /* DGPS corrections */
+    // ssr_t ssr[MAXSAT];  /* SSR corrections */
 } nav_t;
 
 typedef struct {        /* station parameter type */
@@ -929,8 +929,8 @@ typedef struct {        /* RTCM control struct type */
     obs_t obs;          /* observation data (uncorrected) */
     nav_t nav;          /* satellite ephemerides */
     sta_t sta;          /* station parameters */
-    dgps_t *dgps;       /* output of dgps corrections */
-    ssr_t ssr[MAXSAT];  /* output of ssr corrections */
+    // dgps_t *dgps;       /* output of dgps corrections */
+    // ssr_t ssr[MAXSAT];  /* output of ssr corrections */
     char msg[128];      /* special message */
     char msgtype[256];  /* last message type */
     char msmtype[7][128]; /* msm signal types */

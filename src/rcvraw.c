@@ -1076,7 +1076,7 @@ static int decode_frame_eph(const uint8_t *buff, eph_t *eph)
         trace(3,"decode_frame_eph error: iode=%d %d iodc=%d\n",eph_sat.iode,
               iode,eph_sat.iodc);
         return 0;
-}
+    }
     eph_sat.week=adjgpsweek(week);
     eph_sat.ttr=gpst2time(eph_sat.week,tow1);
     if      (eph_sat.toes<tow1-302400.0) eph_sat.week++;
@@ -1341,8 +1341,8 @@ extern int init_raw(raw_t *raw, int format)
         !(raw->obuf.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
         !(raw->nav.eph  =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2))||
         !(raw->nav.alm  =(alm_t  *)malloc(sizeof(alm_t )*MAXSAT))||
-        !(raw->nav.geph =(geph_t *)malloc(sizeof(geph_t)*NSATGLO))||
-        !(raw->nav.seph =(seph_t *)malloc(sizeof(seph_t)*NSATSBS*2))) {
+        !(raw->nav.geph =(geph_t *)malloc(sizeof(geph_t)*NSATGLO))) {
+        // ||!(raw->nav.seph =(seph_t *)malloc(sizeof(seph_t)*NSATSBS*2))) {
         free_raw(raw);
         return 0;
     }
@@ -1369,9 +1369,9 @@ extern int init_raw(raw_t *raw, int format)
     
     /* initialize receiver dependent data */
     raw->format=format;
-    switch (format) {
-        case STRFMT_RT17: ret=init_rt17(raw); break;
-    }
+    // switch (format) {
+    //     case STRFMT_RT17: ret=init_rt17(raw); break;
+    // }
     if (!ret) {
         free_raw(raw);
         return 0;
@@ -1395,9 +1395,9 @@ extern void free_raw(raw_t *raw)
     free(raw->nav.seph ); raw->nav.seph =NULL; raw->nav.ns=0;
     
     /* free receiver dependent data */
-    switch (raw->format) {
-        case STRFMT_RT17: free_rt17(raw); break;
-    }
+    // switch (raw->format) {
+    //     case STRFMT_RT17: free_rt17(raw); break;
+    // }
     raw->rcv_data=NULL;
 }
 /* input receiver raw data from stream -----------------------------------------

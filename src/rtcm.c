@@ -69,7 +69,7 @@ extern int init_rtcm(rtcm_t *rtcm)
     obsd_t data0={{0}};
     eph_t  eph0 ={0,-1,-1};
     geph_t geph0={0,-1};
-    ssr_t ssr0={{{0}}};
+    // ssr_t ssr0={{{0}}};
     int i,j;
     
     trace(3,"init_rtcm:\n");
@@ -84,10 +84,10 @@ extern int init_rtcm(rtcm_t *rtcm)
         rtcm->sta.pos[i]=rtcm->sta.del[i]=0.0;
     }
     rtcm->sta.hgt=0.0;
-    rtcm->dgps=NULL;
-    for (i=0;i<MAXSAT;i++) {
-        rtcm->ssr[i]=ssr0;
-    }
+    // rtcm->dgps=NULL;
+    // for (i=0;i<MAXSAT;i++) {
+    //     rtcm->ssr[i]=ssr0;
+    // }
     rtcm->msg[0]=rtcm->msgtype[0]=rtcm->opt[0]='\0';
     for (i=0;i<6;i++) rtcm->msmtype[i][0]='\0';
     rtcm->obsflag=rtcm->ephsat=0;

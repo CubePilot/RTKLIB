@@ -210,10 +210,10 @@ extern int ionocorr(gtime_t time, const nav_t *nav, int sat, const double *pos,
           azel[1]*R2D);
     
     /* SBAS ionosphere model */
-    if (ionoopt==IONOOPT_SBAS) {
-        if (sbsioncorr(time,nav,pos,azel,ion,var)) return 1;
-        err=1;
-    }
+    // if (ionoopt==IONOOPT_SBAS) {
+    //     if (sbsioncorr(time,nav,pos,azel,ion,var)) return 1;
+    //     err=1;
+    // }
     /* IONEX TEC model */
     if (ionoopt==IONOOPT_TEC) {
         if (iontec(time,nav,pos,azel,1,ion,var)) return 1;
@@ -260,10 +260,10 @@ extern int tropcorr(gtime_t time, const nav_t *nav, const double *pos,
         return 1;
     }
     /* SBAS (MOPS) troposphere model */
-    if (tropopt==TROPOPT_SBAS) {
-        *trp=sbstropcorr(time,pos,azel,var);
-        return 1;
-    }
+    // if (tropopt==TROPOPT_SBAS) {
+    //     *trp=sbstropcorr(time,pos,azel,var);
+    //     return 1;
+    // }
     /* no correction */
     *trp=0.0;
     *var=tropopt==TROPOPT_OFF?SQR(ERR_TROP):0.0;

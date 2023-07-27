@@ -1175,7 +1175,7 @@ static int decode_trksfrbx(raw_t *raw)
 /* decode UBX-RXM-SFRB: subframe buffer (GPS/SBAS) ---------------------------*/
 static int decode_rxmsfrb(raw_t *raw)
 {
-    uint32_t words[10];
+    // uint32_t words[10];
     uint8_t *p=raw->buff+6,buff[30];
     int i,sys,prn,sat,id;
     
@@ -1202,11 +1202,11 @@ static int decode_rxmsfrb(raw_t *raw)
             else if (id==4) return decode_ionutc(raw,sat);
         }
     }
-    else {
-        for (i=0,p+=2;i<10;i++,p+=4) words[i]=U4(p);
-        if (!sbsdecodemsg(raw->time,prn,words,&raw->sbsmsg)) return 0;
-        return 3;
-    }
+    // else {
+    //     for (i=0,p+=2;i<10;i++,p+=4) words[i]=U4(p);
+    //     if (!sbsdecodemsg(raw->time,prn,words,&raw->sbsmsg)) return 0;
+    //     return 3;
+    // }
     return 0;
 }
 /* decode ubx-tim-tm2: time mark data ----------------------------------------*/
