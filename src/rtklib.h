@@ -134,7 +134,7 @@ void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
 #ifndef NFREQ
-#define NFREQ       2                   /* number of carrier frequencies */
+#define NFREQ       1                   /* number of carrier frequencies */
 #endif
 #define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 

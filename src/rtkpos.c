@@ -466,7 +466,7 @@ static int selsat(const obsd_t *obs, double *azel, int nu, int nr,
 {
     int i,j,k=0;
     
-    trace(3,"selsat  : nu=%d nr=%d\n",nu,nr);
+    rtklib_debug(3,"selsat  : nu=%d nr=%d\n",nu,nr);
     
     for (i=0,j=nu;i<nu&&j<nu+nr;i++,j++) {
         if      (obs[i].sat<obs[j].sat) j--;
@@ -474,6 +474,8 @@ static int selsat(const obsd_t *obs, double *azel, int nu, int nr,
         else if (azel[1+j*2]>=opt->elmin) { /* elevation at base station */
             sat[k]=obs[i].sat; iu[k]=i; ir[k++]=j;
             trace(4,"(%2d) sat=%3d iu=%2d ir=%2d\n",k-1,obs[i].sat,i,j);
+        } else {
+            rtklib_debug(4,"(%2d) sat=%3d excluded for low el %f\n",k,obs[i].sat, azel[1+j*2]);
         }
     }
     return k;
@@ -1249,9 +1251,21 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 sysj=rtk->ssat[sat[j]-1].sys;
                 freqi=freq[frq+iu[i]*nf];
                 freqj=freq[frq+iu[j]*nf];
-                if (freqi<=0.0||freqj<=0.0) continue;
-                if (!test_sys(sysj,m)) continue;
-                if (!validobs(iu[j],ir[j],f,nf,y)) continue;
+                if (freqi<=0.0||freqj<=0.0) {
+                    // rtklib_debug(2,"ddres : no frequency for %s sat=%2d %2d\n",
+                    //              satsys(sat[i],NULL),sat[i],sat[j]);
+                    continue;
+                }
+                if (!test_sys(sysj,m)) {
+                    // rtklib_debug(2,"ddres : invalid sys=%2d sat=%2d %2d\n",
+                    //              sysj,sat[i],sat[j]);
+                    continue;
+                }
+                if (!validobs(iu[j],ir[j],f,nf,y)) {
+                    // rtklib_debug(2,"ddres : invalid obs data %s sat=%2d %2d\n",
+                    //              satsys(sat[i],NULL),sat[i],sat[j]);
+                    continue;
+                }
             
                 if (H) {
                     Hi=H+nv*rtk->nx;
@@ -1345,7 +1359,7 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 if (fabs(v[nv])>opt->maxinno[code]*threshadj) {
                     rtk->ssat[sat[j]-1].vsat[frq]=0;
                     rtk->ssat[sat[j]-1].rejc[frq]++;
-                    errmsg(rtk,"outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",
+                    rtklib_debug(4,"outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",
                             sat[i],sat[j],code?"P":"L",frq+1,v[nv]);
                     continue;
                 }
@@ -1950,7 +1964,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     trace(3,"base station:\n");
     if (!zdres(1,obs+nu,nr,rs+nu*6,dts+nu*2,var+nu,svh+nu,nav,rtk->rb,opt,1,
                y+nu*nf*2,e+nu*3,azel+nu*2,freq+nu*nf)) {
-        errmsg(rtk,"initial base station position error\n");
+        rtklib_debug(4,"initial base station position error\n");
         
         free(rs); free(dts); free(var); free(y); free(e); free(azel);
         free(freq);
@@ -1981,9 +1995,9 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     }
     
     /* initialize Pp,xa to zero, xp to rtk->x */
-    xp=mat(rtk->nx,1); Pp=zeros(rtk->nx,rtk->nx); xa=mat(rtk->nx,1);
+    xp=mat(rtk->nx,1); Pp=rtk->P; xa=mat(rtk->nx,1);
     matcpy(xp,rtk->x,rtk->nx,1);
-    matcpy(Pp,rtk->P,rtk->nx,rtk->nx);
+    // matcpy(Pp,rtk->P,rtk->nx,rtk->nx);
     
     ny=ns*nf*2+2;
     v=mat(ny,1); H=zeros(rtk->nx,ny); R=mat(ny,ny); bias=mat(rtk->nx,1);
@@ -2004,7 +2018,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 e    = line of sight unit vectors to sats
                 azel = [az, el] to sats                                   */
         if (!zdres(0,obs,nu,rs,dts,var,svh,nav,xp,opt,0,y,e,azel,freq)) {
-            errmsg(rtk,"rover initial position error\n");
+            rtklib_debug(4,"rover initial position error\n");
             stat=SOLQ_NONE;
             break;
         }
@@ -2021,7 +2035,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 O R = double diff measurement error covariances
                 O vflg = list of sats used for dd  */
         if ((nv=ddres(rtk,nav,obs,dt,xp,Pp,sat,y,e,azel,freq,iu,ir,ns,v,H,R,vflg))<4) {
-            errmsg(rtk,"not enough double-differenced residual, n=%d\n", nv);
+            rtklib_debug(4,"not enough double-differenced residual, n=%d\n", nv);
             stat=SOLQ_NONE;
             break;
         }
@@ -2031,12 +2045,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Pp=(I-K*H')*P                  */
         trace(3,"before filter x=");tracemat(3,rtk->x,1,9,13,6);
         if ((info=filter(xp,Pp,H,v,R,rtk->nx,nv))) {
-            errmsg(rtk,"filter error (info=%d)\n",info);
+            rtklib_debug(4,"filter error (info=%d)\n",info);
             stat=SOLQ_NONE;
             break;
         }
-        trace(3,"after filter x=");tracemat(3,xp,1,9,13,6);
-        trace(4,"x(%d)=",i+1); tracemat(4,xp,1,NR(opt),13,4);
+        // trace(3,"after filter x=");tracemat(3,xp,1,9,13,6);
+        // trace(4,"x(%d)=",i+1); tracemat(4,xp,1,NR(opt),13,4);
     }
     /* calc zero diff residuals again after kalman filter update */
     if (stat!=SOLQ_NONE&&zdres(0,obs,nu,rs,dts,var,svh,nav,xp,opt,0,y,e,azel,freq)) {
@@ -2046,10 +2060,10 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         
         /* validation of float solution, always returns 1, msg to trace file if large residual */
         if (valpos(rtk,v,R,vflg,nv,4.0)) {
-            
+            rtklib_debug(4,"Valid solution\n");
             /* copy states */
             matcpy(rtk->x,xp,rtk->nx,1);
-            matcpy(rtk->P,Pp,rtk->nx,rtk->nx);
+            // matcpy(rtk->P,Pp,rtk->nx,rtk->nx);
             
             /* update valid satellite status for ambiguity control */
             rtk->sol.ns=0;
@@ -2085,7 +2099,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                         /* switch to kinematic after qualify for hold if in static-start mode */
                         if (rtk->opt.mode==PMODE_STATIC_START) {
                             rtk->opt.mode=PMODE_KINEMA;
-                            trace(3,"Fix and hold complete: switch to kinematic mode\n");
+                            rtklib_debug(3,"Fix and hold complete: switch to kinematic mode\n");
                             }
                     }
                     stat=SOLQ_FIX;
@@ -2096,6 +2110,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
 
     /* save solution status (fixed or float) */
     if (stat==SOLQ_FIX) {
+        rtklib_debug(4,"SOLQ_FIX\n");
         for (i=0;i<3;i++) {
             rtk->sol.rr[i]=rtk->xa[i];
             rtk->sol.qr[i]=(float)rtk->Pa[i+i*rtk->na];
@@ -2108,7 +2123,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             for (i=3;i<6;i++) {
                 rtk->sol.rr[i]=rtk->xa[i];
                 rtk->sol.qv[i-3]=(float)rtk->Pa[i+i*rtk->na];
-    }
+            }
             rtk->sol.qv[3]=(float)rtk->Pa[4+3*rtk->na];
             rtk->sol.qv[4]=(float)rtk->Pa[5+4*rtk->na];
             rtk->sol.qv[5]=(float)rtk->Pa[5+3*rtk->na];
@@ -2151,7 +2166,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             rtk->ssat[i].lock[j]++;
     }
     free(rs); free(dts); free(var); free(y); free(e); free(azel); free(freq);
-    free(xp); free(Pp);  free(xa);  free(v); free(H); free(R); free(bias);
+    free(xp); /*free(Pp);*/  free(xa);  free(v); free(H); free(R); free(bias);
     
     if (stat!=SOLQ_NONE) rtk->sol.stat=stat;
 
@@ -2293,7 +2308,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
      position variance smaller than threshold */
     if (rtk->P[0]==0||rtk->P[0]>STD_PREC_VAR_THRESH) {
         if (!pntpos(obs,nu,nav,&rtk->opt,&rtk->sol,NULL,rtk->ssat,msg)) {
-            errmsg(rtk,"point pos error (%s)\n",msg);
+            rtklib_debug(4, "point pos error (%s)\n",msg);
 
             // if (!rtk->opt.dynamics) {
             //     outsolstat(rtk,nav);
@@ -2331,7 +2346,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
     }
     /* check number of data of base station and age of differential */
     if (nr==0) {
-        errmsg(rtk,"no base station observation data for rtk\n");
+        rtklib_debug(4, "no base station observation data for rtk\n");
         // outsolstat(rtk,nav);
         return 1;
     }
@@ -2340,7 +2355,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
            skip if position varinace below threshold*/
         if (rtk->P[0]==0||rtk->P[0]>STD_PREC_VAR_THRESH) {
             if (!pntpos(obs+nu,nr,nav,&rtk->opt,&solb,NULL,NULL,msg)) {
-                errmsg(rtk,"base station position error (%s)\n",msg);
+                rtklib_debug(4, "base station position error (%s)\n",msg);
                 return 0;
             }
             /* if base position uninitialized, use full position */
@@ -2358,7 +2373,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
         rtk->sol.age=(float)timediff(rtk->sol.time,solb.time);
 
         if (fabs(rtk->sol.age)>MIN(TTOL_MOVEB,opt->maxtdiff)) {
-            errmsg(rtk,"time sync error for moving-base (age=%.1f)\n",rtk->sol.age);
+            rtklib_debug(4, "time sync error for moving-base (age=%.1f)\n",rtk->sol.age);
             return 0;
         }
         
@@ -2372,7 +2387,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
         rtk->sol.age=(float)timediff(obs[0].time,obs[nu].time);
         
         if (fabs(rtk->sol.age)>opt->maxtdiff) {
-            errmsg(rtk,"age of differential error (age=%.1f)\n",rtk->sol.age);
+            rtklib_debug(4, "age of differential error (age=%.1f)\n",rtk->sol.age);
             // outsolstat(rtk,nav);
             return 1;
         }
