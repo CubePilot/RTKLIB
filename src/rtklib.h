@@ -58,9 +58,10 @@ extern "C" {
 #define trace(loglevel, fmt, ...) do {} while(0)
 void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 
-#define rtklib_debug(loglevel, fmt, ...) do { \
-    can_log_level_printf(loglevel, fmt, ##__VA_ARGS__); \
-} while (0)
+#define rtklib_debug(loglevel, fmt, ...) 
+// do {
+//     can_log_level_printf(loglevel, fmt, ##__VA_ARGS__);
+// } while (0)
 
 /* constants -----------------------------------------------------------------*/
 
@@ -134,7 +135,7 @@ void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
 #ifndef NFREQ
-#define NFREQ       1                   /* number of carrier frequencies */
+#define NFREQ       3                   /* number of carrier frequencies */
 #endif
 #define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 
@@ -1174,8 +1175,8 @@ typedef struct {        /* RTK control/result type */
     double rb[6];       /* base position/velocity (ecef) (m|m/s) */
     int nx,na;          /* number of float states/fixed states */
     double tt;          /* time difference between current and previous (s) */
-    double *x, *P;      /* float states and their covariance */
-    double *xa,*Pa;     /* fixed states and their covariance */
+    double *x;      /* float states and their covariance */
+    double *xa,*Pa; /* fixed states and their covariance */
     int nfix;           /* number of continuous fixes of ambiguity */
     int excsat;         /* index of next satellite to be excluded for partial ambiguity resolution */
     int nb_ar;          /* number of ambiguities used for AR last epoch */
@@ -1841,6 +1842,8 @@ EXPORT void gis_free(gis_t *gis);
 extern int showmsg(const char *format,...);
 extern void settspan(gtime_t ts, gtime_t te);
 extern void settime(gtime_t time);
+extern double get_RTK_P(int index);
+extern void set_RTK_P(int index, double val);
 
 #ifdef CUSTOM_TIME_API
 EXPORT gtime_t get_curr_time(void);

@@ -1350,10 +1350,15 @@ extern int input_ubx(raw_t *raw, uint8_t data)
         }
     }
     if (raw->nbyte<6||raw->nbyte<raw->len) return 0;
+    uint16_t nbyte=raw->nbyte;
     raw->nbyte=0;
     
     /* decode ublox raw message */
-    return decode_ubx(raw);
+    if (decode_ubx(raw)) {
+        return nbyte;
+    } else {
+        return 0;
+    }
 }
 /* input ublox raw message from file -------------------------------------------
 * fetch next ublox raw data and input a message from file
