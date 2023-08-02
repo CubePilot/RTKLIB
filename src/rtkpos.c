@@ -104,7 +104,7 @@ static FILE *fp_stat=NULL;       /* rtk status file pointer */
 static char file_stat[1024]="";  /* rtk status file original path */
 static gtime_t time_stat={0};    /* rtk status file time */
 
-#define NUM_COV_BLOCKS 32
+#define NUM_COV_BLOCKS 64
 #define NUM_COV_ELEMENTS 16
 struct cov {
     double val;
@@ -154,6 +154,7 @@ void set_cov_value(struct cov *covP[],int index, double val) {
         if (covP[i] == NULL) {
             // allocate a new block
             covP[i] = (struct cov *)malloc(NUM_COV_ELEMENTS*sizeof(struct cov));
+            memset(covP[i],0,NUM_COV_ELEMENTS*sizeof(struct cov));
             for (int j=0;j<NUM_COV_ELEMENTS;j++) {
                 covP[i][j].index = -1;
             }
@@ -178,6 +179,7 @@ void cpy_cov(struct cov *covP[], struct cov *covPp[]) {
         if (covP[i] != NULL) {
             if (covPp[i] == NULL) {
                 covPp[i] = (struct cov *)malloc(NUM_COV_ELEMENTS*sizeof(struct cov));
+                memset(covPp[i],0,NUM_COV_ELEMENTS*sizeof(struct cov));
                 memcpy(covPp[i], covP[i], NUM_COV_ELEMENTS*sizeof(struct cov));
             } else {
                 memcpy(covPp[i], covP[i], NUM_COV_ELEMENTS*sizeof(struct cov));
@@ -575,7 +577,14 @@ static int selsat(const obsd_t *obs, double *azel, int nu, int nr,
     int i,j,k=0;
     
     // rtklib_debug(3,"selsat  : nu=%d nr=%d\n",nu,nr);
-    
+    // print sat info
+    for (i=0;i<nu;i++) {
+        trace(2,"(%d) sat=%3d azel=%6.1f %4.1f\n",i,obs[i].sat,azel[1+i*2]*R2D,azel[0+i*2]*R2D);
+    }
+    for (j=nu;j<nu+nr;j++) {
+        trace(2,"(%d) sat=%3d azel=%6.1f %4.1f\n",j,obs[j].sat,azel[1+j*2]*R2D,azel[0+j*2]*R2D);
+    }
+
     for (i=0,j=nu;i<nu&&j<nu+nr;i++,j++) {
         if      (obs[i].sat<obs[j].sat) j--;
         else if (obs[i].sat>obs[j].sat) i--;
@@ -1379,8 +1388,8 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 freqi=freq[frq+iu[i]*nf];
                 freqj=freq[frq+iu[j]*nf];
                 if (freqi<=0.0||freqj<=0.0) {
-                    rtklib_debug(2,"ddres : no frequency for %s sat=%2d %2d\n",
-                                 satsys(sat[i],NULL),sat[i],sat[j]);
+                    // rtklib_debug(2,"ddres : no frequency for %s sat=%2d %2d\n",
+                    //              satsys(sat[i],NULL),sat[i],sat[j]);
                     continue;
                 }
                 if (!test_sys(sysj,m)) {
@@ -1389,8 +1398,8 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                     continue;
                 }
                 if (!validobs(iu[j],ir[j],f,nf,y)) {
-                    rtklib_debug(2,"ddres : invalid obs data %s sat=%2d %2d\n",
-                                 satsys(sat[i],NULL),sat[i],sat[j]);
+                    // rtklib_debug(2,"ddres : invalid obs data %s sat=%2d %2d\n",
+                    //              satsys(sat[i],NULL),sat[i],sat[j]);
                     continue;
                 }
             
@@ -1486,8 +1495,8 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 if (fabs(v[nv])>opt->maxinno[code]*threshadj) {
                     rtk->ssat[sat[j]-1].vsat[frq]=0;
                     rtk->ssat[sat[j]-1].rejc[frq]++;
-                    rtklib_debug(4,"outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",
-                            sat[i],sat[j],code?"P":"L",frq+1,v[nv]);
+                    // rtklib_debug(4,"outlier rejected (sat=%3d-%3d %s%d v=%.3f threshold=%.3f)\n",
+                    //         sat[i],sat[j],code?"P":"L",frq+1,v[nv], opt->maxinno[code]*threshadj);
                     continue;
                 }
 
@@ -1515,17 +1524,16 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                     icb=rtk->ssat[sat[i]-1].icbias[frq]*CLIGHT/freqi - 
                         rtk->ssat[sat[j]-1].icbias[frq]*CLIGHT/freqj;
                 jj=IB(sat[j],frq,&rtk->opt);
-                trace(3,"sat=%3d-%3d %s%d v=%13.3f R=%9.6f %9.6f icb=%9.3f lock=%5d x=%9.3f P=%.3f\n",
-                        sat[i],sat[j],code?"P":"L",frq+1,v[nv],Ri[nv],Rj[nv],icb,
-                        rtk->ssat[sat[j]-1].lock[frq],x[jj],P[jj+jj*rtk->nx]);
-
+                // trace(2,"sat=%3d-%3d %s%d v=%13.3f R=%9.6f %9.6f icb=%9.3f lock=%5d x=%9.3f P=%.3f\n",
+                //         sat[i],sat[j],code?"P":"L",frq+1,v[nv],Ri[nv],Rj[nv],icb,
+                //         rtk->ssat[sat[j]-1].lock[frq],x[jj],get_RTK_P(jj+jj*rtk->nx));
                 vflg[nv++]=(sat[i]<<16)|(sat[j]<<8)|((code?1:0)<<4)|(frq);
                 nb[b]++;
             }
             b++;
         }
     }  /* end of system loop */
-    
+
     /* baseline length constraint, for fixed distance between base and rover */
     if (rtk->opt.baseline[0]>0.0&&constbl(rtk,x,v,H,Ri,Rj,nv)) {
         vflg[nv++]=3<<4;
@@ -1535,6 +1543,7 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
     
     /* double-differenced measurement error covariance */
     ddcov(nb,b,Ri,Rj,nv,R);
+    // trace(2, "NV=%d\n", nv);
     
     free(Ri); free(Rj); free(im);
     free(tropu); free(tropr); free(dtdxu); free(dtdxr);
@@ -1938,7 +1947,7 @@ static int resamb_LAMBDA(rtk_t *rtk, double *bias, double *xa,int gps,int glo,in
           used to translate phase biases to double difference */
     ix=imat(nx,2);
     if ((nb=ddidx(rtk,ix,gps,glo,sbs))<(rtk->opt.minfixsats-1)) {  /* nb is sat pairs */
-        errmsg(rtk,"not enough valid double-differences\n");
+        errmsg(rtk,"not enough valid double-differences %d\n", nb);
         free(ix);
         return -1; /* flag abort */
     }
@@ -2233,7 +2242,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     }
     /* select common satellites between rover and base-station */
     if ((ns=selsat(obs,azel,nu,nr,opt,sat,iu,ir))<=0) {
-        errmsg(rtk,"no common satellite\n");
+        errmsg(rtk,"no common satellite %d %d\n", nu, nr);
         
         free(rs); free(dts); free(var); free(y); free(e); free(azel);
         free(freq);

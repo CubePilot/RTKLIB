@@ -55,10 +55,16 @@ extern "C" {
 #define EXPORT
 #endif
 
-#define trace(loglevel, fmt, ...) do {} while(0)
-void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
+#define trace(loglevel, fmt, ...) \
+/*  do { \
+    if (loglevel < 2) { \
+        printf(fmt, ##__VA_ARGS__); \
+    } \
+} while (0)
+*/
+// void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 
-#define rtklib_debug(loglevel, fmt, ...) 
+#define rtklib_debug(loglevel, fmt, ...) trace(1, "rtklib_debug:" fmt, ##__VA_ARGS__)
 // do {
 //     can_log_level_printf(loglevel, fmt, ##__VA_ARGS__);
 // } while (0)
@@ -135,7 +141,7 @@ void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
 #ifndef NFREQ
-#define NFREQ       3                   /* number of carrier frequencies */
+#define NFREQ       2                   /* number of carrier frequencies */
 #endif
 #define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 
