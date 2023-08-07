@@ -1850,6 +1850,8 @@ extern void settspan(gtime_t ts, gtime_t te);
 extern void settime(gtime_t time);
 extern double get_RTK_P(int index);
 extern void set_RTK_P(int index, double val);
+extern uint32_t get_RTK_P_consumed();
+extern uint32_t get_RTK_Pp_consumed();
 
 #ifdef CUSTOM_TIME_API
 EXPORT gtime_t get_curr_time(void);

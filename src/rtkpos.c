@@ -105,7 +105,7 @@ static char file_stat[1024]="";  /* rtk status file original path */
 static gtime_t time_stat={0};    /* rtk status file time */
 
 #define NUM_COV_BLOCKS 64
-#define NUM_COV_ELEMENTS 16
+#define NUM_COV_ELEMENTS 32
 struct cov {
     double val;
     int index;
@@ -196,12 +196,40 @@ void set_RTK_P(int index, double val) {
     set_cov_value(rtk_P, index, val);
 }
 
+uint32_t get_RTK_P_consumed() {
+    uint32_t count = 0;
+    for (int i=0;i<NUM_COV_BLOCKS;i++) {
+        if (rtk_P[i] != NULL) {
+            for (int j=0;j<NUM_COV_ELEMENTS;j++) {
+                if (rtk_P[i][j].index != -1) {
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}
+
 double get_RTK_Pp(int index) {
     return get_cov_value(rtk_Pp, index);
 }
 
 void set_RTK_Pp(int index, double val) {
     set_cov_value(rtk_Pp, index, val);
+}
+
+uint32_t get_RTK_Pp_consumed() {
+    uint32_t count = 0;
+    for (int i=0;i<NUM_COV_BLOCKS;i++) {
+        if (rtk_Pp[i] != NULL) {
+            for (int j=0;j<NUM_COV_ELEMENTS;j++) {
+                if (rtk_Pp[i][j].index != -1) {
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
 }
 
 void cpy_RTK_Pp_to_RTK_P() {
@@ -595,6 +623,7 @@ static int selsat(const obsd_t *obs, double *azel, int nu, int nr,
             // rtklib_debug(4,"(%2d) sat=%3d excluded for low el %f\n",k,obs[i].sat, azel[1+j*2]);
         }
     }
+    // for (i=0;i<k;i++) rtklib_debug(3,"sat=%3d azel=%6.1f %4.1f\n",sat[i],azel[1+ir[i]*2]*R2D,azel[0+ir[i]*2]*R2D);
     return k;
 }
 /* temporal update of position/velocity/acceleration -------------------------*/
@@ -2012,7 +2041,8 @@ static int resamb_LAMBDA(rtk_t *rtk, double *bias, double *xa,int gps,int glo,in
             for (i=0;i<na;i++) {
                 rtk->xa[i]=rtk->x[i];
                 // for (j=0;j<na;j++) rtk->Pa[i+j*na]=rtk->P[i+j*nx];
-                for (j=0;j<na;j++) set_RTK_P(i+j*na,get_RTK_P(i+j*nx));
+                for (j=0;j<na;j++) rtk->Pa[i+j*na]=get_RTK_P(i+j*nx);
+                // for (j=0;j<na;j++) set_RTK_P(i+j*na,get_RTK_P(i+j*nx));
             }
             /* y = differences between float and fixed dd phase-biases
                bias = fixed dd phase-biases   */
@@ -2341,7 +2371,10 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 if (f==0) rtk->sol.ns++; /* valid satellite count by L1 */
             }
             /* too few valid phases */
-            if (rtk->sol.ns<4) stat=SOLQ_DGPS;
+            if (rtk->sol.ns<4) {
+                rtklib_debug(4,"not enough valid satellites ns=%d\n",rtk->sol.ns);
+                stat=SOLQ_DGPS;
+            }
         }
         else stat=SOLQ_NONE;
     }
