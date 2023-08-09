@@ -2439,7 +2439,7 @@ static int decode_type1230(rtcm_t *rtcm)
 {
     int i=24+12,j,staid,align,mask,bias;
     
-    if (i+20>=rtcm->len*8) {
+    if (i+20>rtcm->len*8) {
         trace(2,"rtcm3 1230: length error len=%d\n",rtcm->len);
         return -1;
     }

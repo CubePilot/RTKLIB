@@ -104,16 +104,16 @@ static FILE *fp_stat=NULL;       /* rtk status file pointer */
 static char file_stat[1024]="";  /* rtk status file original path */
 static gtime_t time_stat={0};    /* rtk status file time */
 
-#define NUM_COV_BLOCKS 64
+#define NUM_COV_BLOCKS 128
 #define NUM_COV_ELEMENTS 32
 struct cov {
     double val;
-    int index;
+    int32_t index;
 };
 struct cov *rtk_P[NUM_COV_BLOCKS];
 struct cov *rtk_Pp[NUM_COV_BLOCKS];
 
-double get_cov_value(struct cov *covP[], int index) {
+double get_cov_value(struct cov *covP[], int32_t index) {
     for (int i=0;i<NUM_COV_BLOCKS;i++) {
         if (covP[i] != NULL) {
             // search for index
@@ -127,7 +127,7 @@ double get_cov_value(struct cov *covP[], int index) {
     return 0.0;
 }
 
-void set_cov_value(struct cov *covP[],int index, double val) {
+void set_cov_value(struct cov *covP[], int32_t index, double val) {
     for (int i=0;i<NUM_COV_BLOCKS;i++) {
         if (covP[i] != NULL) {
             // search for index
@@ -188,11 +188,11 @@ void cpy_cov(struct cov *covP[], struct cov *covPp[]) {
     }
 }
 
-double get_RTK_P(int index) {
+double get_RTK_P(int32_t index) {
     return get_cov_value(rtk_P, index);
 }
 
-void set_RTK_P(int index, double val) {
+void set_RTK_P(int32_t index, double val) {
     set_cov_value(rtk_P, index, val);
 }
 
@@ -210,11 +210,11 @@ uint32_t get_RTK_P_consumed() {
     return count;
 }
 
-double get_RTK_Pp(int index) {
+double get_RTK_Pp(int32_t index) {
     return get_cov_value(rtk_Pp, index);
 }
 
-void set_RTK_Pp(int index, double val) {
+void set_RTK_Pp(int32_t index, double val) {
     set_cov_value(rtk_Pp, index, val);
 }
 

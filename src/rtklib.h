@@ -141,7 +141,7 @@ extern "C" {
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
 #ifndef NFREQ
-#define NFREQ       2                   /* number of carrier frequencies */
+#define NFREQ       1                   /* number of carrier frequencies */
 #endif
 #define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 
@@ -1160,8 +1160,8 @@ typedef struct {        /* satellite status type */
     uint32_t outc [NFREQ]; /* obs outage counter of phase */
     uint32_t slipc[NFREQ]; /* cycle-slip counter */
     uint32_t rejc [NFREQ]; /* reject counter */
-    double gf[NFREQ-1]; /* geometry-free phase (m) */
-    double mw[NFREQ-1]; /* MW-LC (m) */
+    double gf[NFREQ]; /* geometry-free phase (m) */
+    double mw[NFREQ]; /* MW-LC (m) */
     double phw;         /* phase windup (cycle) */
     gtime_t pt[2][NFREQ]; /* previous carrier-phase time */
     double  ph[2][NFREQ]; /* previous carrier-phase observable (cycle) */
@@ -1848,8 +1848,8 @@ EXPORT void gis_free(gis_t *gis);
 extern int showmsg(const char *format,...);
 extern void settspan(gtime_t ts, gtime_t te);
 extern void settime(gtime_t time);
-extern double get_RTK_P(int index);
-extern void set_RTK_P(int index, double val);
+extern double get_RTK_P(int32_t index);
+extern void set_RTK_P(int32_t index, double val);
 extern uint32_t get_RTK_P_consumed();
 extern uint32_t get_RTK_Pp_consumed();
 
