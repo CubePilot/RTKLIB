@@ -12,3 +12,5 @@ __astcache
 
 # gets created by qmake
 /app/qtapp/Makefile
+/app/consapp/convbin/msc/.vs/msc
+/app/consapp/rnx2rtkp/msc/.vs/msc

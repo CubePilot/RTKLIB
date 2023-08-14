@@ -55,13 +55,13 @@ extern "C" {
 #define EXPORT
 #endif
 
-#define trace(loglevel, fmt, ...) \
+//#define trace(loglevel, fmt, ...) \
 /*  do { \
     if (loglevel < 2) { \
         printf(fmt, ##__VA_ARGS__); \
     } \
 } while (0)
-*/
+//*/
 // void can_log_level_printf(uint8_t loglevel, const char *fmt, ...);
 
 #define rtklib_debug(loglevel, fmt, ...) trace(1, "rtklib_debug:" fmt, ##__VA_ARGS__)
@@ -141,7 +141,7 @@ extern "C" {
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
 #ifndef NFREQ
-#define NFREQ       1                   /* number of carrier frequencies */
+#define NFREQ       2                   /* number of carrier frequencies */
 #endif
 #define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 
@@ -239,12 +239,12 @@ extern "C" {
 #ifndef MAXOBS
 #define MAXOBS      96                  /* max number of obs in an epoch */
 #endif
-#define MAXRCV      64                  /* max receiver number (1 to MAXRCV) */
+#define MAXRCV      2                  /* max receiver number (1 to MAXRCV) */
 #define MAXOBSTYPE  64                  /* max number of obs type in RINEX */
 #ifdef OBS_100HZ
 #define DTTOL       0.005               /* tolerance of time difference (s) */
 #else
-#define DTTOL       0.025               /* tolerance of time difference (s) */
+#define DTTOL       0.001               /* tolerance of time difference (s) */
 #endif
 #define MAXDTOE     7200.0              /* max time difference to GPS Toe (s) */
 #define MAXDTOE_QZS 7200.0              /* max time difference to QZSS Toe (s) */
@@ -1146,7 +1146,7 @@ typedef struct {        /* RINEX options type */
 typedef struct {        /* satellite status type */
     uint8_t sys;        /* navigation system */
     uint8_t vs;         /* valid satellite flag single */
-    double azel[2];     /* azimuth/elevation angles {az,el} (rad) */
+    float azel[2];     /* azimuth/elevation angles {az,el} (rad) */
     double resp[NFREQ]; /* residuals of pseudorange (m) */
     double resc[NFREQ]; /* residuals of carrier-phase (m) */
     double icbias[NFREQ];  /* glonass IC bias (cycles) */
@@ -1160,9 +1160,9 @@ typedef struct {        /* satellite status type */
     uint32_t outc [NFREQ]; /* obs outage counter of phase */
     uint32_t slipc[NFREQ]; /* cycle-slip counter */
     uint32_t rejc [NFREQ]; /* reject counter */
-    double gf[NFREQ]; /* geometry-free phase (m) */
-    double mw[NFREQ]; /* MW-LC (m) */
-    double phw;         /* phase windup (cycle) */
+    //double gf[NFREQ]; /* geometry-free phase (m) */
+    //double mw[NFREQ]; /* MW-LC (m) */
+    //double phw;         /* phase windup (cycle) */
     gtime_t pt[2][NFREQ]; /* previous carrier-phase time */
     double  ph[2][NFREQ]; /* previous carrier-phase observable (cycle) */
 } ssat_t;
@@ -1181,13 +1181,19 @@ typedef struct {        /* RTK control/result type */
     double rb[6];       /* base position/velocity (ecef) (m|m/s) */
     int nx,na;          /* number of float states/fixed states */
     double tt;          /* time difference between current and previous (s) */
-    double *x;      /* float states and their covariance */
-    double *xa,*Pa; /* fixed states and their covariance */
+    double x[411];      /* float states and their covariance */
+    double xa [3], Pa[3*3]; /* fixed states and their covariance */
     int nfix;           /* number of continuous fixes of ambiguity */
     int excsat;         /* index of next satellite to be excluded for partial ambiguity resolution */
     int nb_ar;          /* number of ambiguities used for AR last epoch */
     char holdamb;       /* set if fix-and-hold has occurred at least once */
-    ambc_t ambc[MAXSAT]; /* ambiguity control */
+    /*
+sizeof(rtk->ssat)
+52224
+sizeof(rtk->ambc)
+71808
+*/
+   // ambc_t ambc[MAXSAT]; /* ambiguity control */
     ssat_t ssat[MAXSAT]; /* satellite status */
     int neb;            /* bytes in error message buffer */
     char errbuf[MAXERRMSG]; /* error message buffer */
@@ -1472,7 +1478,7 @@ EXPORT int  geterp (const erp_t *erp, gtime_t time, double *val);
 EXPORT void traceopen(const char *file);
 EXPORT void traceclose(void);
 EXPORT void tracelevel(int level);
-// EXPORT void trace    (int level, const char *format, ...);
+EXPORT void trace    (int level, const char *format, ...);
 EXPORT void tracet   (int level, const char *format, ...);
 EXPORT void tracemat (int level, const double *A, int n, int m, int p, int q);
 EXPORT void traceobs (int level, const obsd_t *obs, int n);
@@ -1848,8 +1854,8 @@ EXPORT void gis_free(gis_t *gis);
 extern int showmsg(const char *format,...);
 extern void settspan(gtime_t ts, gtime_t te);
 extern void settime(gtime_t time);
-extern double get_RTK_P(int32_t index);
-extern void set_RTK_P(int32_t index, double val);
+extern double get_RTK_P(int index);
+extern void set_RTK_P(int index, double val);
 extern uint32_t get_RTK_P_consumed();
 extern uint32_t get_RTK_Pp_consumed();
 

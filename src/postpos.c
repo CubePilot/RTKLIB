@@ -228,13 +228,13 @@ static void update_rtcm_ssr(gtime_t time)
         if (input_rtcm3f(&rtcm,fp_rtcm)<-1) break;
         
         /* update ssr corrections */
-        for (i=0;i<MAXSAT;i++) {
-            if (!rtcm.ssr[i].update||
-                rtcm.ssr[i].iod[0]!=rtcm.ssr[i].iod[1]||
-                timediff(time,rtcm.ssr[i].t0[0])<-1E-3) continue;
-            navs.ssr[i]=rtcm.ssr[i];
-            rtcm.ssr[i].update=0;
-        }
+        //for (i=0;i<MAXSAT;i++) {
+        //    if (!rtcm.ssr[i].update||
+        //        rtcm.ssr[i].iod[0]!=rtcm.ssr[i].iod[1]||
+        //        timediff(time,rtcm.ssr[i].t0[0])<-1E-3) continue;
+        //    navs.ssr[i]=rtcm.ssr[i];
+        //    rtcm.ssr[i].update=0;
+        //}
     }
 }
 /* input obs data, navigation messages and sbas correction -------------------*/
@@ -281,7 +281,7 @@ static int inputobs(obsd_t *obs, int solq, const prcopt_t *popt)
             time=gpst2time(sbss.msgs[isbs].week,sbss.msgs[isbs].tow);
             
             if (getbitu(sbss.msgs[isbs].msg,8,6)!=9) { /* except for geo nav */
-                sbsupdatecorr(sbss.msgs+isbs,&navs);
+               // sbsupdatecorr(sbss.msgs+isbs,&navs);
             }
             if (timediff(time,obs[0].time)>-1.0-DTTOL) break;
             isbs++;
@@ -317,7 +317,7 @@ static int inputobs(obsd_t *obs, int solq, const prcopt_t *popt)
             time=gpst2time(sbss.msgs[isbs].week,sbss.msgs[isbs].tow);
             
             if (getbitu(sbss.msgs[isbs].msg,8,6)!=9) { /* except for geo nav */
-                sbsupdatecorr(sbss.msgs+isbs,&navs);
+               // sbsupdatecorr(sbss.msgs+isbs,&navs);
             }
             if (timediff(time,obs[0].time)<1.0+DTTOL) break;
             isbs--;
@@ -393,7 +393,7 @@ static void corr_phase_bias_ssr(obsd_t *obs, int n, const nav_t *nav)
         if ((freq=sat2freq(obs[i].sat,code,nav))==0.0) continue;
         
         /* correct phase bias (cyc) */
-        obs[i].L[j]-=nav->ssr[obs[i].sat-1].pbias[code-1]*freq/CLIGHT;
+        //obs[i].L[j]-=nav->ssr[obs[i].sat-1].pbias[code-1]*freq/CLIGHT;
     }
 }
 /* process positioning -------------------------------------------------------*/
@@ -428,7 +428,7 @@ static void procpos(FILE *fp, FILE *fptm, const prcopt_t *popt, const solopt_t *
         
         /* carrier-phase bias correction */
         if (!strstr(popt->pppopt,"-ENA_FCB")) {
-            corr_phase_bias_ssr(obs_ptr,n,&navs);
+//            corr_phase_bias_ssr(obs_ptr,n,&navs);
         }
         if (!rtkpos(rtk, obs_ptr,n,&navs)) {
             if (rtk->sol.eventime.time != 0) {
@@ -662,7 +662,7 @@ static void readpreceph(char **infile, int n, const prcopt_t *prcopt,
     /* read sbas message files */
     for (i=0;i<n;i++) {
         if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
-        sbsreadmsg(infile[i],prcopt->sbassatsel,sbs);
+        //sbsreadmsg(infile[i],prcopt->sbassatsel,sbs);
     }
     /* allocate sbas ephemeris */
     nav->ns=nav->nsmax=NSATSBS*2;

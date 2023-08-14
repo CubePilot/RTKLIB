@@ -203,14 +203,14 @@ const double chisqr[100]={      /* chi-sqr(n) (alpha=0.001) */
 };
 const prcopt_t prcopt_default={ /* defaults processing options */
     PMODE_KINEMA,SOLTYPE_FORWARD, /* mode,soltype */
-    2,SYS_GPS|SYS_GLO|SYS_GAL,  /* nf, navsys */
+    1,SYS_GPS|SYS_GLO|SYS_GAL,  /* nf, navsys */
     15.0*D2R,{{0,0}},           /* elmin,snrmask */
     0,3,3,1,0,1,                /* sateph,modear,glomodear,gpsmodear,bdsmodear,arfilter */
     20,0,4,5,10,20,             /* maxout,minlock,minfixsats,minholdsats,mindropsats,minfix */
     1,1,1,1,0,                  /* armaxiter,estion,esttrop,dynamics,tidecorr */
     1,0,0,0,0,                  /* niter,codesmooth,intpref,sbascorr,sbassatsel */
     0,0,                        /* rovpos,refpos */
-    {300.0,300.0,300.0},        /* eratio[] */
+    {300.0},        /* eratio[] */
     {100.0,0.003,0.003,0.0,1.0,52.0,0.0,0.0}, /* err[-,base,el,bl,dop,snr_max,snr,rcverr] */
     {30.0,0.03,0.3},            /* std[] */
     {1E-4,1E-3,1E-4,1E-1,1E-2,0.0}, /* prn[] */
@@ -227,7 +227,7 @@ const prcopt_t prcopt_default={ /* defaults processing options */
 const solopt_t solopt_default={ /* defaults solution output options */
     SOLF_LLH,TIMES_GPST,1,3,    /* posf,times,timef,timeu */
     0,1,0,0,0,0,0,              /* degf,outhead,outopt,outvel,datum,height,geoid */
-    0,0,0,                      /* solstatic,sstat,trace */
+    0,0,3,                      /* solstatic,sstat,trace */
     {0.0,0.0},                  /* nmeaintv */
     " ",""                      /* separator/program name */
 };
@@ -608,8 +608,8 @@ static int code2freq_GPS(uint8_t code, double *freq)
     
     switch (obs[0]) {
         case '1': *freq=FREQL1; return 0; /* L1 */
-        case '2': *freq=FREQL2; return 1; /* L2 */
-        case '5': *freq=FREQL5; return 2; /* L5 */
+        case '2': *freq=FREQL2; return 2; /* L2 */
+        case '5': *freq=FREQL5; return 1; /* L5 */
     }
     return -1;
 }
@@ -636,8 +636,8 @@ static int code2freq_GAL(uint8_t code, double *freq)
     
     switch (obs[0]) {
         case '1': *freq=FREQL1; return 0; /* E1 */
-        case '7': *freq=FREQE5b; return 1; /* E5b */
-        case '5': *freq=FREQL5; return 2; /* E5a */
+        case '7': *freq=FREQE5b; return 2; /* E5b */
+        case '5': *freq=FREQL5; return 1; /* E5a */
         case '6': *freq=FREQL6; return 3; /* E6 */
         case '8': *freq=FREQE5ab; return 4; /* E5ab */
     }
@@ -650,8 +650,8 @@ static int code2freq_QZS(uint8_t code, double *freq)
     
     switch (obs[0]) {
         case '1': *freq=FREQL1; return 0; /* L1 */
-        case '2': *freq=FREQL2; return 1; /* L2 */
-        case '5': *freq=FREQL5; return 2; /* L5 */
+        case '2': *freq=FREQL2; return 2; /* L2 */
+        case '5': *freq=FREQL5; return 1; /* L5 */
         case '6': *freq=FREQL6; return 3; /* L6 */
     }
     return -1;
@@ -662,8 +662,8 @@ static int code2freq_SBS(uint8_t code, double *freq)
     char *obs=code2obs(code);
     
     switch (obs[0]) {
-        case '1': *freq=FREQL1; return 0; /* L1 */
-        case '5': *freq=FREQL5; return 1; /* L5 */
+        case '1': *freq=FREQL1; return 0+5; /* L1 */
+        case '5': *freq=FREQL5; return 1+5; /* L5 */
     }
     return -1;
 }
@@ -675,9 +675,9 @@ static int code2freq_BDS(uint8_t code, double *freq)
     switch (obs[0]) {
         case '1': *freq=FREQL1;     return 0; /* B1C */
         case '2': *freq=FREQ1_CMP; return 0; /* B1I */
-        case '7': *freq=FREQ2_CMP; return 1; /* B2I/B2b */
+        case '7': *freq=FREQ2_CMP; return 3; /* B2I/B2b */
         case '6': *freq=FREQ3_CMP; return 2; /* B3 */
-        case '5': *freq=FREQL5;     return 3; /* B2a */
+        case '5': *freq=FREQL5;     return 1; /* B2a */
         case '8': *freq=FREQE5ab;     return 4; /* B2ab */
     }
     return -1;
@@ -971,6 +971,7 @@ extern double *mat(int n, int m)
     if (!(p=(double *)malloc(sizeof(double)*n*m))) {
         fatalerr("matrix memory allocation error: n=%d,m=%d\n",n,m);
     }
+    memset(p, 0, sizeof(double) * n * m);
     return p;
 }
 /* new integer matrix ----------------------------------------------------------
@@ -986,6 +987,7 @@ extern int *imat(int n, int m)
     if (!(p=(int *)malloc(sizeof(int)*n*m))) {
         fatalerr("integer matrix memory allocation error: n=%d,m=%d\n",n,m);
     }
+    memset(p, 0, sizeof(int) * n * m);
     return p;
 }
 /* zero matrix -----------------------------------------------------------------
@@ -3101,7 +3103,7 @@ extern int gettracelevel(void)
     return level_trace;
 }
 extern void trace(int level, const char *format, ...)
-{
+{   
     va_list ap;
     
     /* print error message to stderr */

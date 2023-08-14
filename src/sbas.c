@@ -429,24 +429,24 @@ extern int sbsupdatecorr(const sbsmsg_t *msg, nav_t *nav)
     
     if (msg->week==0) return -1;
     
-    switch (type) {
-        case  0: stat=decode_sbstype2 (msg,&nav->sbssat); break;
-        case  1: stat=decode_sbstype1 (msg,&nav->sbssat); break;
-        case  2:
-        case  3:
-        case  4:
-        case  5: stat=decode_sbstype2 (msg,&nav->sbssat); break;
-        case  6: stat=decode_sbstype6 (msg,&nav->sbssat); break;
-        case  7: stat=decode_sbstype7 (msg,&nav->sbssat); break;
-        case  9: stat=decode_sbstype9 (msg,nav);          break;
-        case 18: stat=decode_sbstype18(msg,nav ->sbsion); break;
-        case 24: stat=decode_sbstype24(msg,&nav->sbssat); break;
-        case 25: stat=decode_sbstype25(msg,&nav->sbssat); break;
-        case 26: stat=decode_sbstype26(msg,nav ->sbsion); break;
-        case 63: break; /* null message */
-        
-        /*default: trace(2,"unsupported sbas message: type=%d\n",type); break;*/
-    }
+    //switch (type) {
+    //    case  0: stat=decode_sbstype2 (msg,&nav->sbssat); break;
+    //    case  1: stat=decode_sbstype1 (msg,&nav->sbssat); break;
+    //    case  2:
+    //    case  3:
+    //    case  4:
+    //    case  5: stat=decode_sbstype2 (msg,&nav->sbssat); break;
+    //    case  6: stat=decode_sbstype6 (msg,&nav->sbssat); break;
+    //    case  7: stat=decode_sbstype7 (msg,&nav->sbssat); break;
+    //    case  9: stat=decode_sbstype9 (msg,nav);          break;
+    //    case 18: stat=decode_sbstype18(msg,nav ->sbsion); break;
+    //    case 24: stat=decode_sbstype24(msg,&nav->sbssat); break;
+    //    case 25: stat=decode_sbstype25(msg,&nav->sbssat); break;
+    //    case 26: stat=decode_sbstype26(msg,nav ->sbsion); break;
+    //    case 63: break; /* null message */
+    //    
+    //    /*default: trace(2,"unsupported sbas message: type=%d\n",type); break;*/
+    //}
     return stat?type:-1;
 }
 /* read sbas log file --------------------------------------------------------*/
@@ -666,59 +666,59 @@ static void searchigp(gtime_t time, const double *pos, const sbsion_t *ion,
 extern int sbsioncorr(gtime_t time, const nav_t *nav, const double *pos,
                       const double *azel, double *delay, double *var)
 {
-    const double re=6378.1363,hion=350.0;
-    int i,err=0;
-    double fp,posp[2],x=0.0,y=0.0,t,w[4]={0};
-    const sbsigp_t *igp[4]={0}; /* {ws,wn,es,en} */
-    
-    trace(4,"sbsioncorr: pos=%.3f %.3f azel=%.3f %.3f\n",pos[0]*R2D,pos[1]*R2D,
-          azel[0]*R2D,azel[1]*R2D);
-    
-    *delay=*var=0.0;
-    if (pos[2]<-100.0||azel[1]<=0) return 1;
-    
-    /* ipp (ionospheric pierce point) position */
-    fp=ionppp(pos,azel,re,hion,posp);
-    
-    /* search igps around ipp */
-    searchigp(time,posp,nav->sbsion,igp,&x,&y);
-    
-    /* weight of igps */
-    if (igp[0]&&igp[1]&&igp[2]&&igp[3]) {
-        w[0]=(1.0-x)*(1.0-y); w[1]=(1.0-x)*y; w[2]=x*(1.0-y); w[3]=x*y;
-    }
-    else if (igp[0]&&igp[1]&&igp[2]) {
-        w[1]=y; w[2]=x;
-        if ((w[0]=1.0-w[1]-w[2])<0.0) err=1;
-    }
-    else if (igp[0]&&igp[2]&&igp[3]) {
-        w[0]=1.0-x; w[3]=y;
-        if ((w[2]=1.0-w[0]-w[3])<0.0) err=1;
-    }
-    else if (igp[0]&&igp[1]&&igp[3]) {
-        w[0]=1.0-y; w[3]=x;
-        if ((w[1]=1.0-w[0]-w[3])<0.0) err=1;
-    }
-    else if (igp[1]&&igp[2]&&igp[3]) {
-        w[1]=1.0-x; w[2]=1.0-y;
-        if ((w[3]=1.0-w[1]-w[2])<0.0) err=1;
-    }
-    else err=1;
-    
-    if (err) {
-        trace(2,"no sbas iono correction: lat=%3.0f lon=%4.0f\n",posp[0]*R2D,
-              posp[1]*R2D);
-        return 0;
-    }
-    for (i=0;i<4;i++) {
-        if (!igp[i]) continue;
-        t=timediff(time,igp[i]->t0);
-        *delay+=w[i]*igp[i]->delay;
-        *var+=w[i]*varicorr(igp[i]->give)*9E-8*fabs(t);
-    }
-    *delay*=fp; *var*=fp*fp;
-    
-    trace(5,"sbsioncorr: dion=%7.2f sig=%7.2f\n",*delay,sqrt(*var));
+    //const double re=6378.1363,hion=350.0;
+    //int i,err=0;
+    //double fp,posp[2],x=0.0,y=0.0,t,w[4]={0};
+    //const sbsigp_t *igp[4]={0}; /* {ws,wn,es,en} */
+    //
+    //trace(4,"sbsioncorr: pos=%.3f %.3f azel=%.3f %.3f\n",pos[0]*R2D,pos[1]*R2D,
+    //      azel[0]*R2D,azel[1]*R2D);
+    //
+    //*delay=*var=0.0;
+    //if (pos[2]<-100.0||azel[1]<=0) return 1;
+    //
+    ///* ipp (ionospheric pierce point) position */
+    //fp=ionppp(pos,azel,re,hion,posp);
+    //
+    ///* search igps around ipp */
+    //searchigp(time,posp,nav->sbsion,igp,&x,&y);
+    //
+    ///* weight of igps */
+    //if (igp[0]&&igp[1]&&igp[2]&&igp[3]) {
+    //    w[0]=(1.0-x)*(1.0-y); w[1]=(1.0-x)*y; w[2]=x*(1.0-y); w[3]=x*y;
+    //}
+    //else if (igp[0]&&igp[1]&&igp[2]) {
+    //    w[1]=y; w[2]=x;
+    //    if ((w[0]=1.0-w[1]-w[2])<0.0) err=1;
+    //}
+    //else if (igp[0]&&igp[2]&&igp[3]) {
+    //    w[0]=1.0-x; w[3]=y;
+    //    if ((w[2]=1.0-w[0]-w[3])<0.0) err=1;
+    //}
+    //else if (igp[0]&&igp[1]&&igp[3]) {
+    //    w[0]=1.0-y; w[3]=x;
+    //    if ((w[1]=1.0-w[0]-w[3])<0.0) err=1;
+    //}
+    //else if (igp[1]&&igp[2]&&igp[3]) {
+    //    w[1]=1.0-x; w[2]=1.0-y;
+    //    if ((w[3]=1.0-w[1]-w[2])<0.0) err=1;
+    //}
+    //else err=1;
+    //
+    //if (err) {
+    //    trace(2,"no sbas iono correction: lat=%3.0f lon=%4.0f\n",posp[0]*R2D,
+    //          posp[1]*R2D);
+    //    return 0;
+    //}
+    //for (i=0;i<4;i++) {
+    //    if (!igp[i]) continue;
+    //    t=timediff(time,igp[i]->t0);
+    //    *delay+=w[i]*igp[i]->delay;
+    //    *var+=w[i]*varicorr(igp[i]->give)*9E-8*fabs(t);
+    //}
+    //*delay*=fp; *var*=fp*fp;
+    //
+    //trace(5,"sbsioncorr: dion=%7.2f sig=%7.2f\n",*delay,sqrt(*var));
     return 1;
 }
 /* get meterological parameters ----------------------------------------------*/
@@ -862,26 +862,26 @@ static int sbsfastcorr(gtime_t time, int sat, const sbssat_t *sbssat,
 extern int sbssatcorr(gtime_t time, int sat, const nav_t *nav, double *rs,
                       double *dts, double *var)
 {
-    double drs[3]={0},dclk=0.0,prc=0.0;
-    int i;
-    
-    trace(3,"sbssatcorr : sat=%2d\n",sat);
-    
-    /* sbas long term corrections */
-    if (!sbslongcorr(time,sat,&nav->sbssat,drs,&dclk)) {
-        return 0;
-    }
-    /* sbas fast corrections */
-    if (!sbsfastcorr(time,sat,&nav->sbssat,&prc,var)) {
-        return 0;
-    }
-    for (i=0;i<3;i++) rs[i]+=drs[i];
-    
-    dts[0]+=dclk+prc/CLIGHT;
-    
-    trace(4,"sbssatcorr: sat=%2d drs=%6.3f %6.3f %6.3f dclk=%.3f %.3f var=%.3f\n",
-          sat,drs[0],drs[1],drs[2],dclk,prc/CLIGHT,*var);
-    
+    //double drs[3]={0},dclk=0.0,prc=0.0;
+    //int i;
+    //
+    //trace(3,"sbssatcorr : sat=%2d\n",sat);
+    //
+    ///* sbas long term corrections */
+    //if (!sbslongcorr(time,sat,&nav->sbssat,drs,&dclk)) {
+    //    return 0;
+    //}
+    ///* sbas fast corrections */
+    //if (!sbsfastcorr(time,sat,&nav->sbssat,&prc,var)) {
+    //    return 0;
+    //}
+    //for (i=0;i<3;i++) rs[i]+=drs[i];
+    //
+    //dts[0]+=dclk+prc/CLIGHT;
+    //
+    //trace(4,"sbssatcorr: sat=%2d drs=%6.3f %6.3f %6.3f dclk=%.3f %.3f var=%.3f\n",
+    //      sat,drs[0],drs[1],drs[2],dclk,prc/CLIGHT,*var);
+    //
     return 1;
 }
 /* decode sbas message ---------------------------------------------------------

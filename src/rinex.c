@@ -2834,9 +2834,11 @@ extern int outrnxhnavb(FILE *fp, const rnxopt_t *opt, const seph_t *seph)
     double ep[6];
     int prn;
     char code[32],*sep;
-    
+     return 1;
     trace(3,"outrnxhnavb: sat=%2d\n",seph->sat);
     
+   
+
     if ((satsys(seph->sat,&prn)&opt->navsys)!=SYS_SBS) return 0;
     
     time2epoch(seph->t0,ep);

@@ -185,7 +185,7 @@ extern int input_rtcm2(rtcm_t *rtcm, uint8_t data)
         rtcm->nbyte=0; rtcm->word&=0x3;
         
         /* decode rtcm2 message */
-        return decode_rtcm2(rtcm);
+        return 0;//decode_rtcm2(rtcm);
     }
     return 0;
 }
@@ -370,7 +370,8 @@ extern int gen_rtcm3(rtcm_t *rtcm, int type, int subtype, int sync)
     setbitu(rtcm->buff,i,10,0          ); i+=10;
     
     /* encode rtcm 3 message body */
-    if (!encode_rtcm3(rtcm,type,subtype,sync)) return 0;
+    if (!encode_rtcm3(rtcm,type,subtype,sync)) 
+        return 0;
     
     /* padding to align 8 bit boundary */
     for (i=rtcm->nbit;i%8;i++) {

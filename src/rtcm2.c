@@ -68,14 +68,14 @@ static int decode_type1(rtcm_t *rtcm)
             trace(2,"rtcm2 1 prc/rrc indicates satellite problem: prn=%d\n",prn);
             continue;
         }
-        if (rtcm->dgps) {
-            sat=satno(SYS_GPS,prn);
-            rtcm->dgps[sat-1].t0=rtcm->time;
-            rtcm->dgps[sat-1].prc=prc*(fact?0.32:0.02);
-            rtcm->dgps[sat-1].rrc=rrc*(fact?0.032:0.002);
-            rtcm->dgps[sat-1].iod=iod;
-            rtcm->dgps[sat-1].udre=udre;
-        }
+        //if (rtcm->dgps) {
+        //    sat=satno(SYS_GPS,prn);
+        //    rtcm->dgps[sat-1].t0=rtcm->time;
+        //    rtcm->dgps[sat-1].prc=prc*(fact?0.32:0.02);
+        //    rtcm->dgps[sat-1].rrc=rrc*(fact?0.032:0.002);
+        //    rtcm->dgps[sat-1].iod=iod;
+        //    rtcm->dgps[sat-1].udre=udre;
+        //}
     }
     return 7;
 }
