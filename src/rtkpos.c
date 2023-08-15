@@ -2738,11 +2738,10 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
 
     //printf("RelPos: %.3f %.3f %.3f                                  \n", rtk->sol.rr[0] - rtk->rb[0], rtk->sol.rr[1] - rtk->rb[1], rtk->sol.rr[2] - rtk->rb[2]);
     double heading = atan2(rtk->sol.rr[1] - rtk->rb[1], rtk->sol.rr[0] - rtk->rb[0]);
- printf("RelHeading: %.3f\n", heading*R2D);
 
  // get vector length of sol.rr - rtk->rb
  double vector_length = sqrt(pow(rtk->sol.rr[0] - rtk->rb[0], 2) + pow(rtk->sol.rr[1] - rtk->rb[1], 2) + pow(rtk->sol.rr[2] - rtk->rb[2], 2));
- printf("vel length %f \n", vector_length);
+ printf("RelHeading: %.3f vel length %f \n", heading * R2D,vector_length);
 
 //uint8_t buff[MAXSOLMSG+1];
     //int nn;

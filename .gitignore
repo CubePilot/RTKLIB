@@ -14,3 +14,10 @@ __astcache
 /app/qtapp/Makefile
 /app/consapp/convbin/msc/.vs/msc
 /app/consapp/rnx2rtkp/msc/.vs/msc
+*.ubx
+*.nav
+*.sbs
+*.rtcm3
+*.pos
+trace.txt
+.stat
