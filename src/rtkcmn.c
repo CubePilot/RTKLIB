@@ -1834,8 +1834,8 @@ extern void time2str(gtime_t t, char *s, int n)
 *-----------------------------------------------------------------------------*/
 extern char *time_str(gtime_t t, int n)
 {
-    static char buff[64];
-    time2str(t,buff,n);
+    static char buff[64] = {0};
+    //time2str(t,buff,n);
     return buff;
 }
 /* time to day of year ---------------------------------------------------------
@@ -3243,7 +3243,7 @@ extern void traceb(int level, const uint8_t *p, int n)
 extern void traceopen(const char *file) {}
 extern void traceclose(void) {}
 extern void tracelevel(int level) {}
-// extern void trace   (int level, const char *format, ...) {}
+extern void trace   (int level, const char *format, ...) {}
 extern void tracet  (int level, const char *format, ...) {}
 extern void tracemat(int level, const double *A, int n, int m, int p, int q) {}
 extern void traceobs(int level, const obsd_t *obs, int n) {}
