@@ -51,7 +51,7 @@
 #include "rtklib.h"
 
 /* algorithm configuration -------------------------------------------------- */
-#define STD_PREC_VAR_THRESH 0  /* pos variance threshold to skip standard precision */
+#define STD_PREC_VAR_THRESH 0.5  /* pos variance threshold to skip standard precision */
                               /* solution: 0   = run every epoch, */
                               /*           0.5 = skip except for first*/
 
@@ -2646,14 +2646,14 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
      position variance smaller than threshold */
     // if (rtk->P[0]==0||rtk->P[0]>STD_PREC_VAR_THRESH) {
     if (get_RTK_P(0)==0||get_RTK_P(0)>STD_PREC_VAR_THRESH) {
-        if (!pntpos(obs,nu,nav,&rtk->opt,&rtk->sol,NULL,rtk->ssat,msg)) {
-            rtklib_debug(4, "point pos error (%s)\n",msg);
+            if (!pntpos(obs, nu, nav, &rtk->opt, &rtk->sol, NULL, rtk->ssat, msg)) {
+                rtklib_debug(4, "point pos error (%s)\n", msg);
 
-             if (!rtk->opt.dynamics) {
-                 outsolstat(rtk,nav);
-                 return 0;
-             }
-        }
+                if (!rtk->opt.dynamics) {
+                    outsolstat(rtk, nav);
+                    return 0;
+                }
+            }
     } else rtk->sol.time=obs[0].time;
     if (time.time!=0) rtk->tt=timediff(rtk->sol.time,time);
 
@@ -2694,11 +2694,10 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
            skip if position varinace below threshold*/
         // if (rtk->P[0]==0||rtk->P[0]>STD_PREC_VAR_THRESH) {
         if (get_RTK_P(0)==0||get_RTK_P(0)>STD_PREC_VAR_THRESH) {
-           /* if (!pntpos(obs + nu, nr, nav, &rtk->opt, &solb, NULL, NULL, msg)) {
+            if (!pntpos(obs + nu, nr, nav, &rtk->opt, &solb, NULL, NULL, msg)) {
                 rtklib_debug(4, "base station position error (%s)\n",msg);
                 return 0;
-            }
-            */
+            }       
             /* if base position uninitialized, use full position */
             if (fabs(rtk->rb[0])<0.1)
                 for (i=0;i<3;i++) rtk->rb[i]= rtk->sol.rr[i];

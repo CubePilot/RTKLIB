@@ -405,6 +405,12 @@ static int estpos(const obsd_t *obs, int n, const double *rs, const double *dts,
     
     for (i=0;i<3;i++) x[i]=sol->rr[i];
 
+    x[3]=sol->dtr[0]*CLIGHT;/* receiver clock bias (s) */
+    x[4]=sol->dtr[1]*CLIGHT;/* GLO-GPS time offset (s) */
+    x[5]=sol->dtr[2]*CLIGHT;/* GAL-GPS time offset (s) */
+    x[6]=sol->dtr[3]*CLIGHT;/* BDS-GPS time offset (s) */
+    x[7]=sol->dtr[4]*CLIGHT;/* IRN-GPS time offset (s) */
+
     for (i=0;i<MAXITR;i++) {
 
         /* pseudorange residuals (m) */
