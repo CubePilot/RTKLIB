@@ -826,9 +826,9 @@ static int scan_file(char **files, int nf, rnxopt_t *opt, strfile_t *str,
         str->nav->glo_fcn[prn-1]=str->nav->geph[i].frq+8;
         str->nav->geph[i]=geph0;
     }
-    for (i=0;i<str->nav->ns;i++) {
-        str->nav->seph[i]=seph0;
-    }
+    //for (i=0;i<str->nav->ns;i++) {
+    //    str->nav->seph[i]=seph0;
+    //}
     dump_stas(str);
     dump_halfc(str);
     return 1;
@@ -1091,14 +1091,14 @@ static void convnav(FILE **ofp, rnxopt_t *opt, strfile_t *str, int *n)
         }
     }
     else if (sys==SYS_SBS) {
-        if (ofp[1]&&!sep_nav) {
-            outrnxhnavb(ofp[1],opt,str->nav->seph+prn-MINPRNSBS);
-            n[1]++;
-        }
-        else if (ofp[3]&&sep_nav) {
-            outrnxhnavb(ofp[3],opt,str->nav->seph+prn-MINPRNSBS);
-            n[3]++;
-        }
+        //if (ofp[1]&&!sep_nav) {
+        //    outrnxhnavb(ofp[1],opt,str->nav->seph+prn-MINPRNSBS);
+        //    n[1]++;
+        //}
+        //else if (ofp[3]&&sep_nav) {
+        //    outrnxhnavb(ofp[3],opt,str->nav->seph+prn-MINPRNSBS);
+        //    n[3]++;
+        //}
     }
     else if (sys==SYS_QZS) {
         if (ofp[1]&&!sep_nav) {
@@ -1174,21 +1174,21 @@ static void convsbs(FILE **ofp, rnxopt_t *opt, strfile_t *str, int *n,
     
     /* output SBAS message log */
     if (ofp[NOUTFILE-1]) {
-        sbsoutmsg(ofp[NOUTFILE-1],&str->raw.sbsmsg);
+        //sbsoutmsg(ofp[NOUTFILE-1],&str->raw.sbsmsg);
         n[NOUTFILE-1]++;
     }
     /* output SBAS ephemeris */
-    if ((opt->navsys&SYS_SBS)&&sbsupdatecorr(&str->raw.sbsmsg,str->nav)==9) {
-        
-        if (ofp[1]&&!sep_nav) {
-            outrnxhnavb(ofp[1],opt,str->nav->seph+prn-MINPRNSBS);
-            n[1]++;
-        }
-        else if (ofp[3]&&sep_nav) {
-            outrnxhnavb(ofp[3],opt,str->nav->seph+prn-MINPRNSBS);
-            n[3]++;
-        }
-    }
+    //if ((opt->navsys&SYS_SBS)&&sbsupdatecorr(&str->raw.sbsmsg,str->nav)==9) {
+    //    
+    //    if (ofp[1]&&!sep_nav) {
+    //        outrnxhnavb(ofp[1],opt,str->nav->seph+prn-MINPRNSBS);
+    //        n[1]++;
+    //    }
+    //    else if (ofp[3]&&sep_nav) {
+    //        outrnxhnavb(ofp[3],opt,str->nav->seph+prn-MINPRNSBS);
+    //        n[3]++;
+    //    }
+    //}
 }
 /* set approx position in RINEX options --------------------------------------*/
 static void setopt_apppos(strfile_t *str, rnxopt_t *opt)

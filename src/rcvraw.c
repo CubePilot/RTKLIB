@@ -1332,15 +1332,15 @@ extern int init_raw(raw_t *raw, int format)
     raw->obs.data =NULL;
     raw->obuf.data=NULL;
     raw->nav.eph  =NULL;
-    raw->nav.alm  =NULL;
+    //raw->nav.alm  =NULL;
     raw->nav.geph =NULL;
-    raw->nav.seph =NULL;
+    //raw->nav.seph =NULL;
     raw->rcv_data =NULL;
     
     if (!(raw->obs.data =(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
         !(raw->obuf.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
         !(raw->nav.eph  =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2))||
-        !(raw->nav.alm  =(alm_t  *)malloc(sizeof(alm_t )*MAXSAT))||
+        //!(raw->nav.alm  =(alm_t  *)malloc(sizeof(alm_t )*MAXSAT))||
         !(raw->nav.geph =(geph_t *)malloc(sizeof(geph_t)*NSATGLO))) {
         // ||!(raw->nav.seph =(seph_t *)malloc(sizeof(seph_t)*NSATSBS*2))) {
         free_raw(raw);
@@ -1349,15 +1349,15 @@ extern int init_raw(raw_t *raw, int format)
     raw->obs.n =0;
     raw->obuf.n=0;
     raw->nav.n =MAXSAT*2;
-    raw->nav.na=MAXSAT;
+    //raw->nav.na=MAXSAT;
     raw->nav.ng=NSATGLO;
-    raw->nav.ns=NSATSBS*2;
+    //raw->nav.ns=NSATSBS*2;
     for (i=0;i<MAXOBS   ;i++) raw->obs.data [i]=data0;
     for (i=0;i<MAXOBS   ;i++) raw->obuf.data[i]=data0;
     for (i=0;i<MAXSAT*2 ;i++) raw->nav.eph  [i]=eph0;
-    for (i=0;i<MAXSAT   ;i++) raw->nav.alm  [i]=alm0;
+    //for (i=0;i<MAXSAT   ;i++) raw->nav.alm  [i]=alm0;
     for (i=0;i<NSATGLO  ;i++) raw->nav.geph [i]=geph0;
-    for (i=0;i<NSATSBS*2;i++) raw->nav.seph [i]=seph0;
+    //for (i=0;i<NSATSBS*2;i++) raw->nav.seph [i]=seph0;
     raw->sta.name[0]=raw->sta.marker[0]='\0';
     raw->sta.antdes[0]=raw->sta.antsno[0]='\0';
     raw->sta.rectype[0]=raw->sta.recver[0]=raw->sta.recsno[0]='\0';
@@ -1390,9 +1390,9 @@ extern void free_raw(raw_t *raw)
     free(raw->obs.data ); raw->obs.data =NULL; raw->obs.n =0;
     free(raw->obuf.data); raw->obuf.data=NULL; raw->obuf.n=0;
     free(raw->nav.eph  ); raw->nav.eph  =NULL; raw->nav.n =0;
-    free(raw->nav.alm  ); raw->nav.alm  =NULL; raw->nav.na=0;
+    //free(raw->nav.alm  ); raw->nav.alm  =NULL; raw->nav.na=0;
     free(raw->nav.geph ); raw->nav.geph =NULL; raw->nav.ng=0;
-    free(raw->nav.seph ); raw->nav.seph =NULL; raw->nav.ns=0;
+    //free(raw->nav.seph ); raw->nav.seph =NULL; raw->nav.ns=0;
     
     /* free receiver dependent data */
     // switch (raw->format) {
@@ -1414,17 +1414,17 @@ extern int input_raw(raw_t *raw, int format, uint8_t data)
     trace(5,"input_raw: format=%d data=0x%02x\n",format,data);
     
     switch (format) {
-        case STRFMT_OEM4 : return input_oem4 (raw,data);
+        //case STRFMT_OEM4 : return input_oem4 (raw,data);
         /* case STRFMT_CNAV : return input_cnav (raw,data); */
         case STRFMT_UBX  : return input_ubx  (raw,data);
-        case STRFMT_SBP  : return input_sbp  (raw,data);
-        case STRFMT_CRES : return input_cres (raw,data);
-        case STRFMT_STQ  : return input_stq  (raw,data);
-        case STRFMT_JAVAD: return input_javad(raw,data);
-        case STRFMT_NVS  : return input_nvs  (raw,data);
-        case STRFMT_BINEX: return input_bnx  (raw,data);
-        case STRFMT_RT17 : return input_rt17 (raw,data);
-        case STRFMT_SEPT : return input_sbf  (raw,data);
+        //case STRFMT_SBP  : return input_sbp  (raw,data);
+        //case STRFMT_CRES : return input_cres (raw,data);
+        //case STRFMT_STQ  : return input_stq  (raw,data);
+        //case STRFMT_JAVAD: return input_javad(raw,data);
+        //case STRFMT_NVS  : return input_nvs  (raw,data);
+        //case STRFMT_BINEX: return input_bnx  (raw,data);
+        //case STRFMT_RT17 : return input_rt17 (raw,data);
+        //case STRFMT_SEPT : return input_sbf  (raw,data);
         /*case STRFMT_TERSUS: return input_tersus(raw,data);*/
     }
     return 0;
@@ -1441,17 +1441,17 @@ extern int input_rawf(raw_t *raw, int format, FILE *fp)
     trace(4,"input_rawf: format=%d\n",format);
     
     switch (format) {
-        case STRFMT_OEM4 : return input_oem4f (raw,fp);
+        //case STRFMT_OEM4 : return input_oem4f (raw,fp);
         /* case STRFMT_CNAV : return input_cnavf (raw,fp); */
         case STRFMT_UBX  : return input_ubxf  (raw,fp);
-        case STRFMT_SBP  : return input_sbpf  (raw,fp);
-        case STRFMT_CRES : return input_cresf (raw,fp);
-        case STRFMT_STQ  : return input_stqf  (raw,fp);
-        case STRFMT_JAVAD: return input_javadf(raw,fp);
-        case STRFMT_NVS  : return input_nvsf  (raw,fp);
-        case STRFMT_BINEX: return input_bnxf  (raw,fp);
-        case STRFMT_RT17 : return input_rt17f (raw,fp);
-        case STRFMT_SEPT : return input_sbff  (raw,fp);
+        //case STRFMT_SBP  : return input_sbpf  (raw,fp);
+        //case STRFMT_CRES : return input_cresf (raw,fp);
+        //case STRFMT_STQ  : return input_stqf  (raw,fp);
+        //case STRFMT_JAVAD: return input_javadf(raw,fp);
+        //case STRFMT_NVS  : return input_nvsf  (raw,fp);
+        //case STRFMT_BINEX: return input_bnxf  (raw,fp);
+        //case STRFMT_RT17 : return input_rt17f (raw,fp);
+        //case STRFMT_SEPT : return input_sbff  (raw,fp);
         /*case STRFMT_TERSUS: return input_tersusf(raw,fp); */
     }
     return -2;

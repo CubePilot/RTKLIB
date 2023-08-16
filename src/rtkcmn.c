@@ -3164,8 +3164,8 @@ extern void tracenav(int level, const nav_t *nav)
             nav->ion_gps[1],nav->ion_gps[2],nav->ion_gps[3]);
     fprintf(fp_trace,"(ion) %9.4e %9.4e %9.4e %9.4e\n",nav->ion_gps[4],
             nav->ion_gps[5],nav->ion_gps[6],nav->ion_gps[7]);
-    fprintf(fp_trace,"(ion) %9.4e %9.4e %9.4e %9.4e\n",nav->ion_gal[0],
-            nav->ion_gal[1],nav->ion_gal[2],nav->ion_gal[3]);
+    //fprintf(fp_trace,"(ion) %9.4e %9.4e %9.4e %9.4e\n",nav->ion_gal[0],
+    //        nav->ion_gal[1],nav->ion_gal[2],nav->ion_gal[3]);
 }
 extern void tracegnav(int level, const nav_t *nav)
 {
@@ -3187,13 +3187,13 @@ extern void tracehnav(int level, const nav_t *nav)
     int i;
     
     if (!fp_trace||level>level_trace) return;
-    for (i=0;i<nav->ns;i++) {
-        time2str(nav->seph[i].t0,s1,0);
-        time2str(nav->seph[i].tof,s2,0);
-        satno2id(nav->seph[i].sat,id);
-        fprintf(fp_trace,"(%3d) %-3s : %s %s %2d %2d\n",i+1,
-                id,s1,s2,nav->seph[i].svh,nav->seph[i].sva);
-    }
+    //for (i=0;i<nav->ns;i++) {
+    //    time2str(nav->seph[i].t0,s1,0);
+    //    time2str(nav->seph[i].tof,s2,0);
+    //    satno2id(nav->seph[i].sat,id);
+    //    fprintf(fp_trace,"(%3d) %-3s : %s %s %2d %2d\n",i+1,
+    //            id,s1,s2,nav->seph[i].svh,nav->seph[i].sva);
+    //}
 }
 extern void tracepeph(int level, const nav_t *nav)
 {
@@ -3202,18 +3202,18 @@ extern void tracepeph(int level, const nav_t *nav)
     
     if (!fp_trace||level>level_trace) return;
     
-    for (i=0;i<nav->ne;i++) {
-        time2str(nav->peph[i].time,s,0);
-        for (j=0;j<MAXSAT;j++) {
-            satno2id(j+1,id);
-            fprintf(fp_trace,"%-3s %d %-3s %13.3f %13.3f %13.3f %13.3f %6.3f %6.3f %6.3f %6.3f\n",
-                    s,nav->peph[i].index,id,
-                    nav->peph[i].pos[j][0],nav->peph[i].pos[j][1],
-                    nav->peph[i].pos[j][2],nav->peph[i].pos[j][3]*1E9,
-                    nav->peph[i].std[j][0],nav->peph[i].std[j][1],
-                    nav->peph[i].std[j][2],nav->peph[i].std[j][3]*1E9);
-        }
-    }
+    //for (i=0;i<nav->ne;i++) {
+    //    time2str(nav->peph[i].time,s,0);
+    //    for (j=0;j<MAXSAT;j++) {
+    //        satno2id(j+1,id);
+    //        fprintf(fp_trace,"%-3s %d %-3s %13.3f %13.3f %13.3f %13.3f %6.3f %6.3f %6.3f %6.3f\n",
+    //                s,nav->peph[i].index,id,
+    //                nav->peph[i].pos[j][0],nav->peph[i].pos[j][1],
+    //                nav->peph[i].pos[j][2],nav->peph[i].pos[j][3]*1E9,
+    //                nav->peph[i].std[j][0],nav->peph[i].std[j][1],
+    //                nav->peph[i].std[j][2],nav->peph[i].std[j][3]*1E9);
+    //    }
+    //}
 }
 extern void tracepclk(int level, const nav_t *nav)
 {
@@ -3222,15 +3222,15 @@ extern void tracepclk(int level, const nav_t *nav)
     
     if (!fp_trace||level>level_trace) return;
     
-    for (i=0;i<nav->nc;i++) {
-        time2str(nav->pclk[i].time,s,0);
-        for (j=0;j<MAXSAT;j++) {
-            satno2id(j+1,id);
-            fprintf(fp_trace,"%-3s %d %-3s %13.3f %6.3f\n",
-                    s,nav->pclk[i].index,id,
-                    nav->pclk[i].clk[j][0]*1E9,nav->pclk[i].std[j][0]*1E9);
-        }
-    }
+    //for (i=0;i<nav->nc;i++) {
+    //    time2str(nav->pclk[i].time,s,0);
+    //    for (j=0;j<MAXSAT;j++) {
+    //        satno2id(j+1,id);
+    //        fprintf(fp_trace,"%-3s %d %-3s %13.3f %6.3f\n",
+    //                s,nav->pclk[i].index,id,
+    //                nav->pclk[i].clk[j][0]*1E9,nav->pclk[i].std[j][0]*1E9);
+    //    }
+    //}
 }
 extern void traceb(int level, const uint8_t *p, int n)
 {

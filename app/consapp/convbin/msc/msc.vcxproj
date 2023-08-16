@@ -99,28 +99,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\ephemeris.c" />
-    <ClCompile Include="..\..\..\..\src\ionex.c" />
     <ClCompile Include="..\..\..\..\src\pntpos.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\binex.c" />
     <ClCompile Include="..\..\..\..\src\rcv\rt17.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\septentrio.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\swiftnav.c" />
     <ClCompile Include="..\..\..\..\src\rtcm3e.c" />
     <ClCompile Include="..\convbin.c" />
     <ClCompile Include="..\..\..\..\src\convrnx.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\crescent.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\javad.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\novatel.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\nvs.c" />
-    <ClCompile Include="..\..\..\..\src\preceph.c" />
     <ClCompile Include="..\..\..\..\src\rcvraw.c" />
     <ClCompile Include="..\..\..\..\src\rinex.c" />
     <ClCompile Include="..\..\..\..\src\rtcm.c" />
     <ClCompile Include="..\..\..\..\src\rtcm2.c" />
     <ClCompile Include="..\..\..\..\src\rtcm3.c" />
     <ClCompile Include="..\..\..\..\src\rtkcmn.c" />
-    <ClCompile Include="..\..\..\..\src\sbas.c" />
-    <ClCompile Include="..\..\..\..\src\rcv\skytraq.c" />
     <ClCompile Include="..\..\..\..\src\rcv\ublox.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
