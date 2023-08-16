@@ -836,11 +836,11 @@ typedef struct {        /* navigation data type */
     int nt,ntmax;       /* number of tec grid data */
     eph_t *eph;         /* GPS/QZS/GAL/BDS/IRN ephemeris */
     geph_t *geph;       /* GLONASS ephemeris */
-    seph_t *seph;       /* SBAS ephemeris */
-    peph_t *peph;       /* precise ephemeris */
-    pclk_t *pclk;       /* precise clock */
-    alm_t *alm;         /* almanac data */
-    tec_t *tec;         /* tec grid data */
+    //seph_t *seph;       /* SBAS ephemeris */
+    //peph_t *peph;       /* precise ephemeris */
+    //pclk_t *pclk;       /* precise clock */
+    //alm_t *alm;         /* almanac data */
+    //tec_t *tec;         /* tec grid data */
     erp_t  erp;         /* earth rotation parameters */
     double utc_gps[8];  /* GPS delta-UTC parameters {A0,A1,Tot,WNt,dt_LS,WN_LSF,DN,dt_LSF} */
     double utc_glo[8];  /* GLONASS UTC time parameters {tau_C,tau_GPS} */

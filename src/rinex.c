@@ -1455,22 +1455,22 @@ static int add_geph(nav_t *nav, const geph_t *geph)
     nav->geph[nav->ng++]=*geph;
     return 1;
 }
-static int add_seph(nav_t *nav, const seph_t *seph)
-{
-    seph_t *nav_seph;
-    
-    if (nav->nsmax<=nav->ns) {
-        nav->nsmax+=1024;
-        if (!(nav_seph=(seph_t *)realloc(nav->seph,sizeof(seph_t)*nav->nsmax))) {
-            trace(1,"decode_seph malloc error: n=%d\n",nav->nsmax);
-            free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
-            return 0;
-        }
-        nav->seph=nav_seph;
-    }
-    nav->seph[nav->ns++]=*seph;
-    return 1;
-}
+//static int add_seph(nav_t *nav, const seph_t *seph)
+//{
+//    seph_t *nav_seph;
+//    
+//    if (nav->nsmax<=nav->ns) {
+//        nav->nsmax+=1024;
+//        if (!(nav_seph=(seph_t *)realloc(nav->seph,sizeof(seph_t)*nav->nsmax))) {
+//            trace(1,"decode_seph malloc error: n=%d\n",nav->nsmax);
+//            free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
+//            return 0;
+//        }
+//        nav->seph=nav_seph;
+//    }
+//    nav->seph[nav->ns++]=*seph;
+//    return 1;
+//}
 /* read RINEX navigation data ------------------------------------------------*/
 static int readrnxnav(FILE *fp, const char *opt, double ver, int sys,
                       nav_t *nav)
@@ -1491,7 +1491,7 @@ static int readrnxnav(FILE *fp, const char *opt, double ver, int sys,
         if (stat) {
             switch (type) {
                 case 1 : stat=add_geph(nav,&geph); break;
-                case 2 : stat=add_seph(nav,&seph); break;
+                case 2: return 0;// stat = add_seph(nav, &seph); break;
                 default: stat=add_eph (nav,&eph ); break;
             }
             if (!stat) return 0;
@@ -1502,55 +1502,55 @@ static int readrnxnav(FILE *fp, const char *opt, double ver, int sys,
 /* read RINEX clock ----------------------------------------------------------*/
 static int readrnxclk(FILE *fp, const char *opt, int index, nav_t *nav)
 {
-    pclk_t *nav_pclk;
-    gtime_t time;
-    double data[2];
-    int i,j,sat,mask;
-    char buff[MAXRNXLEN],satid[8]="";
-    
-    trace(3,"readrnxclk: index=%d\n", index);
-    
-    if (!nav) return 0;
-    
-    /* set system mask */
-    mask=set_sysmask(opt);
-    
-    while (fgets(buff,sizeof(buff),fp)) {
-        
-        if (str2time(buff,8,26,&time)) {
-            trace(2,"rinex clk invalid epoch: %34.34s\n",buff);
-            continue;
-        }
-        memcpy(satid,buff+3,4);
-        
-        /* only read AS (satellite clock) record */
-        if (strncmp(buff,"AS",2)||!(sat=satid2no(satid))) continue;
-        
-        if (!(satsys(sat,NULL)&mask)) continue;
-        
-        for (i=0,j=40;i<2;i++,j+=20) data[i]=str2num(buff,j,19);
-        
-        if (nav->nc>=nav->ncmax) {
-            nav->ncmax+=1024;
-            if (!(nav_pclk=(pclk_t *)realloc(nav->pclk,sizeof(pclk_t)*(nav->ncmax)))) {
-                trace(1,"readrnxclk malloc error: nmax=%d\n",nav->ncmax);
-                free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
-                return -1;
-            }
-            nav->pclk=nav_pclk;
-        }
-        if (nav->nc<=0||fabs(timediff(time,nav->pclk[nav->nc-1].time))>1E-9) {
-            nav->nc++;
-            nav->pclk[nav->nc-1].time =time;
-            nav->pclk[nav->nc-1].index=index;
-            for (i=0;i<MAXSAT;i++) {
-                nav->pclk[nav->nc-1].clk[i][0]=0.0;
-                nav->pclk[nav->nc-1].std[i][0]=0.0f;
-            }
-        }
-        nav->pclk[nav->nc-1].clk[sat-1][0]=data[0];
-        nav->pclk[nav->nc-1].std[sat-1][0]=(float)data[1];
-    }
+    //pclk_t *nav_pclk;
+    //gtime_t time;
+    //double data[2];
+    //int i,j,sat,mask;
+    //char buff[MAXRNXLEN],satid[8]="";
+    //
+    //trace(3,"readrnxclk: index=%d\n", index);
+    //
+    //if (!nav) return 0;
+    //
+    ///* set system mask */
+    //mask=set_sysmask(opt);
+    //
+    //while (fgets(buff,sizeof(buff),fp)) {
+    //    
+    //    if (str2time(buff,8,26,&time)) {
+    //        trace(2,"rinex clk invalid epoch: %34.34s\n",buff);
+    //        continue;
+    //    }
+    //    memcpy(satid,buff+3,4);
+    //    
+    //    /* only read AS (satellite clock) record */
+    //    if (strncmp(buff,"AS",2)||!(sat=satid2no(satid))) continue;
+    //    
+    //    if (!(satsys(sat,NULL)&mask)) continue;
+    //    
+    //    for (i=0,j=40;i<2;i++,j+=20) data[i]=str2num(buff,j,19);
+    //    
+    //    if (nav->nc>=nav->ncmax) {
+    //        nav->ncmax+=1024;
+    //        if (!(nav_pclk=(pclk_t *)realloc(nav->pclk,sizeof(pclk_t)*(nav->ncmax)))) {
+    //            trace(1,"readrnxclk malloc error: nmax=%d\n",nav->ncmax);
+    //            free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
+    //            return -1;
+    //        }
+    //        nav->pclk=nav_pclk;
+    //    }
+    //    if (nav->nc<=0||fabs(timediff(time,nav->pclk[nav->nc-1].time))>1E-9) {
+    //        nav->nc++;
+    //        nav->pclk[nav->nc-1].time =time;
+    //        nav->pclk[nav->nc-1].index=index;
+    //        for (i=0;i<MAXSAT;i++) {
+    //            nav->pclk[nav->nc-1].clk[i][0]=0.0;
+    //            nav->pclk[nav->nc-1].std[i][0]=0.0f;
+    //        }
+    //    }
+    //    nav->pclk[nav->nc-1].clk[sat-1][0]=data[0];
+    //    nav->pclk[nav->nc-1].std[sat-1][0]=(float)data[1];
+    //}
     return nav->nc>0;
 }
 /* read RINEX file -----------------------------------------------------------*/
@@ -1706,7 +1706,7 @@ static int cmppclk(const void *p1, const void *p2)
 /* combine precise clock -----------------------------------------------------*/
 static void combpclk(nav_t *nav)
 {
-    pclk_t *nav_pclk;
+    /*pclk_t *nav_pclk;
     int i,j,k;
     
     trace(3,"combpclk: nc=%d\n",nav->nc);
@@ -1735,7 +1735,7 @@ static void combpclk(nav_t *nav)
     nav->pclk=nav_pclk;
     nav->ncmax=nav->nc;
     
-    trace(4,"combpclk: nc=%d\n",nav->nc);
+    trace(4,"combpclk: nc=%d\n",nav->nc);*/
 }
 /* read RINEX clock files ------------------------------------------------------
 * read RINEX clock files
@@ -1797,12 +1797,13 @@ extern int init_rnxctr(rnxctr_t *rnx)
     rnx->obs.data=NULL;
     rnx->nav.eph =NULL;
     rnx->nav.geph=NULL;
-    rnx->nav.seph=NULL;
+    //rnx->nav.seph=NULL;
     
     if (!(rnx->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS   ))||
         !(rnx->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2 ))||
-        !(rnx->nav.geph=(geph_t *)malloc(sizeof(geph_t)*NSATGLO  ))||
-        !(rnx->nav.seph=(seph_t *)malloc(sizeof(seph_t)*NSATSBS*2))) {
+        !(rnx->nav.geph=(geph_t *)malloc(sizeof(geph_t)*NSATGLO  ))//||
+        //!(rnx->nav.seph=(seph_t *)malloc(sizeof(seph_t)*NSATSBS*2))
+        ) {
         free_rnxctr(rnx);
         return 0;
     }
@@ -1817,7 +1818,7 @@ extern int init_rnxctr(rnxctr_t *rnx)
     for (i=0;i<MAXOBS   ;i++) rnx->obs.data[i]=data0;
     for (i=0;i<MAXSAT*2 ;i++) rnx->nav.eph [i]=eph0;
     for (i=0;i<NSATGLO  ;i++) rnx->nav.geph[i]=geph0;
-    for (i=0;i<NSATSBS*2;i++) rnx->nav.seph[i]=seph0;
+    //for (i=0;i<NSATSBS*2;i++) rnx->nav.seph[i]=seph0;
     rnx->ephsat=rnx->ephset=0;
     rnx->opt[0]='\0';
     
@@ -1835,7 +1836,7 @@ extern void free_rnxctr(rnxctr_t *rnx)
     free(rnx->obs.data); rnx->obs.data=NULL; rnx->obs.n =0;
     free(rnx->nav.eph ); rnx->nav.eph =NULL; rnx->nav.n =0;
     free(rnx->nav.geph); rnx->nav.geph=NULL; rnx->nav.ng=0;
-    free(rnx->nav.seph); rnx->nav.seph=NULL; rnx->nav.ns=0;
+    //free(rnx->nav.seph); rnx->nav.seph=NULL; rnx->nav.ns=0;
 }
 /* open RINEX data -------------------------------------------------------------
 * fetch next RINEX message and input a message from file
@@ -1932,7 +1933,7 @@ extern int input_rnxctr(rnxctr_t *rnx, FILE *fp)
     }
     else if (type==2) { /* SBAS ephemeris */
         sys=satsys(seph.sat,&prn);
-        rnx->nav.seph[prn-MINPRNSBS]=seph;
+        //rnx->nav.seph[prn-MINPRNSBS]=seph;
         rnx->time=seph.tof;
         rnx->ephsat=seph.sat;
         rnx->ephset=0;

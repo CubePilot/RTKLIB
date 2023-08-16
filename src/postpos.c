@@ -636,55 +636,55 @@ static void combres(FILE *fp, FILE *fptm, const prcopt_t *popt, const solopt_t *
     }
 }
 /* read prec ephemeris, sbas data, tec grid and open rtcm --------------------*/
-static void readpreceph(char **infile, int n, const prcopt_t *prcopt,
-                        nav_t *nav, sbs_t *sbs)
-{
-    seph_t seph0={0};
-    int i;
-    char *ext;
-    
-    trace(2,"readpreceph: n=%d\n",n);
-    
-    nav->ne=nav->nemax=0;
-    nav->nc=nav->ncmax=0;
-    sbs->n =sbs->nmax =0;
-    
-    /* read precise ephemeris files */
-    for (i=0;i<n;i++) {
-        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
-        //readsp3(infile[i],nav,0);
-    }
-    /* read precise clock files */
-    for (i=0;i<n;i++) {
-        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
-        readrnxc(infile[i],nav);
-    }
-    /* read sbas message files */
-    for (i=0;i<n;i++) {
-        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
-        //sbsreadmsg(infile[i],prcopt->sbassatsel,sbs);
-    }
-    /* allocate sbas ephemeris */
-    nav->ns=nav->nsmax=NSATSBS*2;
-    if (!(nav->seph=(seph_t *)malloc(sizeof(seph_t)*nav->ns))) {
-         showmsg("error : sbas ephem memory allocation");
-         trace(1,"error : sbas ephem memory allocation");
-         return;
-    }
-    for (i=0;i<nav->ns;i++) nav->seph[i]=seph0;
-    
-    /* set rtcm file and initialize rtcm struct */
-    rtcm_file[0]=rtcm_path[0]='\0'; fp_rtcm=NULL;
-    
-    for (i=0;i<n;i++) {
-        if ((ext=strrchr(infile[i],'.'))&&
-            (!strcmp(ext,".rtcm3")||!strcmp(ext,".RTCM3"))) {
-            strcpy(rtcm_file,infile[i]);
-            init_rtcm(&rtcm);
-            break;
-        }
-    }
-}
+//static void readpreceph(char **infile, int n, const prcopt_t *prcopt,
+//                        nav_t *nav, sbs_t *sbs)
+//{
+//    seph_t seph0={0};
+//    int i;
+//    char *ext;
+//    
+//    trace(2,"readpreceph: n=%d\n",n);
+//    
+//    nav->ne=nav->nemax=0;
+//    nav->nc=nav->ncmax=0;
+//    sbs->n =sbs->nmax =0;
+//    
+//    /* read precise ephemeris files */
+//    for (i=0;i<n;i++) {
+//        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
+//        //readsp3(infile[i],nav,0);
+//    }
+//    /* read precise clock files */
+//    for (i=0;i<n;i++) {
+//        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
+//        readrnxc(infile[i],nav);
+//    }
+//    /* read sbas message files */
+//    for (i=0;i<n;i++) {
+//        if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
+//        //sbsreadmsg(infile[i],prcopt->sbassatsel,sbs);
+//    }
+//    /* allocate sbas ephemeris */
+//    nav->ns=nav->nsmax=NSATSBS*2;
+//    if (!(nav->seph=(seph_t *)malloc(sizeof(seph_t)*nav->ns))) {
+//         showmsg("error : sbas ephem memory allocation");
+//         trace(1,"error : sbas ephem memory allocation");
+//         return;
+//    }
+//    for (i=0;i<nav->ns;i++) nav->seph[i]=seph0;
+//    
+//    /* set rtcm file and initialize rtcm struct */
+//    rtcm_file[0]=rtcm_path[0]='\0'; fp_rtcm=NULL;
+//    
+//    for (i=0;i<n;i++) {
+//        if ((ext=strrchr(infile[i],'.'))&&
+//            (!strcmp(ext,".rtcm3")||!strcmp(ext,".RTCM3"))) {
+//            strcpy(rtcm_file,infile[i]);
+//            init_rtcm(&rtcm);
+//            break;
+//        }
+//    }
+//}
 /* free prec ephemeris and sbas data -----------------------------------------*/
 static void freepreceph(nav_t *nav, sbs_t *sbs)
 {
@@ -692,15 +692,15 @@ static void freepreceph(nav_t *nav, sbs_t *sbs)
     
     trace(3,"freepreceph:\n");
     
-    free(nav->peph); nav->peph=NULL; nav->ne=nav->nemax=0;
-    free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
-    free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
+    //free(nav->peph); nav->peph=NULL; nav->ne=nav->nemax=0;
+    //free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
+    //free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
     free(sbs->msgs); sbs->msgs=NULL; sbs->n =sbs->nmax =0;
     for (i=0;i<nav->nt;i++) {
-        free(nav->tec[i].data);
-        free(nav->tec[i].rms );
+        //free(nav->tec[i].data);
+        //free(nav->tec[i].rms );
     }
-    free(nav->tec ); nav->tec =NULL; nav->nt=nav->ntmax=0;
+    //free(nav->tec ); nav->tec =NULL; nav->nt=nav->ntmax=0;
     
     if (fp_rtcm) fclose(fp_rtcm);
     free_rtcm(&rtcm);
@@ -718,7 +718,7 @@ static int readobsnav(gtime_t ts, gtime_t te, double ti, char **infile,
     nav->eph =NULL; nav->n =nav->nmax =0;
     nav->geph=NULL; nav->ng=nav->ngmax=0;
     /* free(nav->seph); */ /* is this needed to avoid memory leak??? */
-    nav->seph=NULL; nav->ns=nav->nsmax=0;
+    //nav->seph=NULL; nav->ns=nav->nsmax=0;
     nepoch=0;
     
     for (i=0;i<n;i++) {
@@ -772,7 +772,7 @@ static void freeobsnav(obs_t *obs, nav_t *nav)
     free(obs->data); obs->data=NULL; obs->n =obs->nmax =0;
     free(nav->eph ); nav->eph =NULL; nav->n =nav->nmax =0;
     free(nav->geph); nav->geph=NULL; nav->ng=nav->ngmax=0;
-    free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
+    //free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
 }
 /* average of single position ------------------------------------------------*/
 static int avepos(double *ra, int rcv, const obs_t *obs, const nav_t *nav,
@@ -1063,7 +1063,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
     if (*fopt->iono&&(ext=strrchr(fopt->iono,'.'))) {
         if (strlen(ext)==4&&(ext[3]=='i'||ext[3]=='I')) {
             reppath(fopt->iono,path,ts,"","");
-            readtec(path,&navs,1);
+//            readtec(path,&navs,1);
         }
     }
     /* read erp data */
@@ -1252,7 +1252,7 @@ static int execses_b(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
     trace(3,"execses_b: n=%d outfile=%s\n",n,outfile);
     
     /* read prec ephemeris and sbas data */
-    readpreceph(infile,n,popt,&navs,&sbss);
+//    readpreceph(infile,n,popt,&navs,&sbss);
     
     for (i=0;i<n;i++) if (strstr(infile[i],"%b")) break;
     

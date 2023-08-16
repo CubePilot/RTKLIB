@@ -2784,43 +2784,43 @@ static void uniqgeph(nav_t *nav)
     trace(4,"uniqgeph: ng=%d\n",nav->ng);
 }
 /* compare sbas ephemeris ----------------------------------------------------*/
-static int cmpseph(const void *p1, const void *p2)
-{
-    seph_t *q1=(seph_t *)p1,*q2=(seph_t *)p2;
-    return q1->tof.time!=q2->tof.time?(int)(q1->tof.time-q2->tof.time):
-           (q1->t0.time!=q2->t0.time?(int)(q1->t0.time-q2->t0.time):
-            q1->sat-q2->sat);
-}
+//static int cmpseph(const void *p1, const void *p2)
+//{
+//    seph_t *q1=(seph_t *)p1,*q2=(seph_t *)p2;
+//    return q1->tof.time!=q2->tof.time?(int)(q1->tof.time-q2->tof.time):
+//           (q1->t0.time!=q2->t0.time?(int)(q1->t0.time-q2->t0.time):
+//            q1->sat-q2->sat);
+//}
 /* sort and unique sbas ephemeris --------------------------------------------*/
-static void uniqseph(nav_t *nav)
-{
-    seph_t *nav_seph;
-    int i,j;
-    
-    trace(3,"uniqseph: ns=%d\n",nav->ns);
-    
-    if (nav->ns<=0) return;
-    
-    qsort(nav->seph,nav->ns,sizeof(seph_t),cmpseph);
-    
-    for (i=j=0;i<nav->ns;i++) {
-        if (nav->seph[i].sat!=nav->seph[j].sat||
-            nav->seph[i].t0.time!=nav->seph[j].t0.time) {
-            nav->seph[++j]=nav->seph[i];
-        }
-    }
-    nav->ns=j+1;
-    
-    if (!(nav_seph=(seph_t *)realloc(nav->seph,sizeof(seph_t)*nav->ns))) {
-        trace(1,"uniqseph malloc error ns=%d\n",nav->ns);
-        free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
-        return;
-    }
-    nav->seph=nav_seph;
-    nav->nsmax=nav->ns;
-    
-    trace(4,"uniqseph: ns=%d\n",nav->ns);
-}
+//static void uniqseph(nav_t *nav)
+//{
+//    seph_t *nav_seph;
+//    int i,j;
+//    
+//    trace(3,"uniqseph: ns=%d\n",nav->ns);
+//    
+//    if (nav->ns<=0) return;
+//    
+//    qsort(nav->seph,nav->ns,sizeof(seph_t),cmpseph);
+//    
+//    for (i=j=0;i<nav->ns;i++) {
+//        if (nav->seph[i].sat!=nav->seph[j].sat||
+//            nav->seph[i].t0.time!=nav->seph[j].t0.time) {
+//            nav->seph[++j]=nav->seph[i];
+//        }
+//    }
+//    nav->ns=j+1;
+//    
+//    if (!(nav_seph=(seph_t *)realloc(nav->seph,sizeof(seph_t)*nav->ns))) {
+//        trace(1,"uniqseph malloc error ns=%d\n",nav->ns);
+//        free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
+//        return;
+//    }
+//    nav->seph=nav_seph;
+//    nav->nsmax=nav->ns;
+//    
+//    trace(4,"uniqseph: ns=%d\n",nav->ns);
+//}
 /* unique ephemerides ----------------------------------------------------------
 * unique ephemerides in navigation data and update carrier wave length
 * args   : nav_t *nav    IO     navigation data
@@ -2833,7 +2833,7 @@ extern void uniqnav(nav_t *nav)
     /* unique ephemeris */
     uniqeph (nav);
     uniqgeph(nav);
-    uniqseph(nav);
+    //uniqseph(nav);
 }
 /* compare observation data -------------------------------------------------*/
 static int cmpobs(const void *p1, const void *p2)
@@ -3035,11 +3035,11 @@ extern void freenav(nav_t *nav, int opt)
 {
     if (opt&0x01) {free(nav->eph ); nav->eph =NULL; nav->n =nav->nmax =0;}
     if (opt&0x02) {free(nav->geph); nav->geph=NULL; nav->ng=nav->ngmax=0;}
-    if (opt&0x04) {free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;}
-    if (opt&0x08) {free(nav->peph); nav->peph=NULL; nav->ne=nav->nemax=0;}
-    if (opt&0x10) {free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;}
-    if (opt&0x20) {free(nav->alm ); nav->alm =NULL; nav->na=nav->namax=0;}
-    if (opt&0x40) {free(nav->tec ); nav->tec =NULL; nav->nt=nav->ntmax=0;}
+    //if (opt&0x04) {free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;}
+    //if (opt&0x08) {free(nav->peph); nav->peph=NULL; nav->ne=nav->nemax=0;}
+    //if (opt&0x10) {free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;}
+    //if (opt&0x20) {free(nav->alm ); nav->alm =NULL; nav->na=nav->namax=0;}
+    //if (opt&0x40) {free(nav->tec ); nav->tec =NULL; nav->nt=nav->ntmax=0;}
 }
 /* debug trace functions -----------------------------------------------------*/
 #ifdef TRACE

@@ -494,24 +494,24 @@ static geph_t *selgeph(gtime_t time, int sat, int iode, const nav_t *nav)
     return nav->geph+j;
 }
 /* select sbas ephememeris ---------------------------------------------------*/
-static seph_t *selseph(gtime_t time, int sat, const nav_t *nav)
-{
-    double t,tmax=MAXDTOE_SBS,tmin=tmax+1.0;
-    int i,j=-1;
-    
-    trace(4,"selseph : time=%s sat=%2d\n",time_str(time,3),sat);
-    
-    for (i=0;i<nav->ns;i++) {
-        if (nav->seph[i].sat!=sat) continue;
-        if ((t=fabs(timediff(nav->seph[i].t0,time)))>tmax) continue;
-        if (t<=tmin) {j=i; tmin=t;} /* toe closest to time */
-    }
-    if (j<0) {
-        trace(3,"no sbas ephemeris     : %s sat=%2d\n",time_str(time,0),sat);
-        return NULL;
-    }
-    return nav->seph+j;
-}
+//static seph_t *selseph(gtime_t time, int sat, const nav_t *nav)
+//{
+//    double t,tmax=MAXDTOE_SBS,tmin=tmax+1.0;
+//    int i,j=-1;
+//    
+//    trace(4,"selseph : time=%s sat=%2d\n",time_str(time,3),sat);
+//    
+//    for (i=0;i<nav->ns;i++) {
+//        if (nav->seph[i].sat!=sat) continue;
+//        if ((t=fabs(timediff(nav->seph[i].t0,time)))>tmax) continue;
+//        if (t<=tmin) {j=i; tmin=t;} /* toe closest to time */
+//    }
+//    if (j<0) {
+//        trace(3,"no sbas ephemeris     : %s sat=%2d\n",time_str(time,0),sat);
+//        return NULL;
+//    }
+//    return nav->seph+j;
+//}
 /* satellite clock with broadcast ephemeris ----------------------------------*/
 static int ephclk(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
                   double *dts)
@@ -535,8 +535,9 @@ static int ephclk(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
         *dts=geph2clk(time,geph);
     }
     else if (sys==SYS_SBS) {
-        if (!(seph=selseph(teph,sat,nav))) return 0;
-        *dts=seph2clk(time,seph);
+        return 0;
+        //if (!(seph=selseph(teph,sat,nav))) return 0;
+        //*dts=seph2clk(time,seph);
     }
     else return 0;
     
@@ -573,11 +574,12 @@ static int ephpos(gtime_t time, gtime_t teph, int sat, const nav_t *nav,
         *svh=geph->svh;
     }
     else if (sys==SYS_SBS) {
-        if (!(seph=selseph(teph,sat,nav))) return 0;
-        seph2pos(time,seph,rs,dts,var);
-        time=timeadd(time,tt);
-        seph2pos(time,seph,rst,dtst,var);
-        *svh=seph->svh;
+        return 0;
+        //if (!(seph=selseph(teph,sat,nav))) return 0;
+        //seph2pos(time,seph,rs,dts,var);
+        //time=timeadd(time,tt);
+        //seph2pos(time,seph,rst,dtst,var);
+        //*svh=seph->svh;
     }
     else return 0;
     

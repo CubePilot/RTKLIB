@@ -216,7 +216,7 @@ extern int ionocorr(gtime_t time, const nav_t *nav, int sat, const double *pos,
     // }
     /* IONEX TEC model */
     if (ionoopt==IONOOPT_TEC) {
-        if (iontec(time,nav,pos,azel,1,ion,var)) return 1;
+        //if (iontec(time,nav,pos,azel,1,ion,var)) return 1;
         err=1;
     }
     /* QZSS broadcast ionosphere model */
