@@ -1089,8 +1089,8 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
         //readdcb(path,&navs,stas);
     } else {
         for (i=0;i<3;i++) {
-            for (j=0;j<MAXSAT;j++) navs.cbias[j][i]=0;
-            for (j=0;j<MAXRCV;j++) for (k=0;k<2;k++) navs.rbias[j][k][i]=0;
+            //for (j=0;j<MAXSAT;j++) navs.cbias[j][i]=0;
+            //for (j=0;j<MAXRCV;j++) for (k=0;k<2;k++) navs.rbias[j][k][i]=0;
         }
     }
     /* set antenna parameters */
