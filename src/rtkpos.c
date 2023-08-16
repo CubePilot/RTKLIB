@@ -509,9 +509,9 @@ extern int rtkoutstat(rtk_t *rtk, char *buff)
              k=IB(i+1,j,&rtk->opt);
              fprintf(fp_stat, "$SAT,%d,%.3f,%s,%d,%.1f,%.1f,%.4f,%.4f,%d,%.0f,%d,%d,%d,%d,%d,%d,%.2f,%.6f,%.5f\n",
                  week, tow, id, j + 1, ssat->azel[0] * R2D, ssat->azel[1] * R2D,
-                 ssat->resp[j], ssat->resc[j], ssat->vsat[j], ssat->snr_rover[j] * SNR_UNIT,
+               0,0/* ssat->resp[j], ssat->resc[j]*/, ssat->vsat[j], ssat->snr_rover[j] * SNR_UNIT,
                  ssat->fix[j], ssat->slip[j] & 3, ssat->lock[j], ssat->outc[j],
-                 ssat->slipc[j], ssat->rejc[j], rtk->x[k],
+                 /*ssat->slipc[j]*/0, ssat->rejc[j], rtk->x[k],
                  /*rtk->P[k + k * rtk->nx] */ get_RTK_P(k + k * rtk->nx), ssat->icbias[j]);
          }
      }
@@ -867,7 +867,7 @@ static void detslp_ll(rtk_t *rtk, const obsd_t *obs, int i, int rcv)
         
         /* save slip and half-cycle valid flag */
         rtk->ssat[sat-1].slip[f]|=(uint8_t)slip;
-        rtk->ssat[sat-1].half[f]=(obs[i].LLI[f]&2)?0:1;
+        //rtk->ssat[sat-1].half[f]=(obs[i].LLI[f]&2)?0:1;
     }
 }
 /* detect cycle slip by geometry free phase jump -----------------------------*/
@@ -978,8 +978,7 @@ static void udbias(rtk_t *rtk, double tt, const obsd_t *obs, const int *sat,
 
         /* update half-cycle valid flag */
         for (k=0;k<nf;k++) {
-            rtk->ssat[sat[i]-1].half[k]=
-                !((obs[iu[i]].LLI[k]&2)||(obs[ir[i]].LLI[k]&2));
+            //rtk->ssat[sat[i]-1].half[k]=                !((obs[iu[i]].LLI[k]&2)||(obs[ir[i]].LLI[k]&2));
         }
     }
     for (k=0;k<nf;k++) {
@@ -1373,9 +1372,9 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
     tropu=mat(ns,1); tropr=mat(ns,1); dtdxu=mat(ns,3); dtdxr=mat(ns,3);
     
     /* zero out residual phase and code biases for all satellites */
-    for (i=0;i<MAXSAT;i++) for (j=0;j<NFREQ;j++) {
-        rtk->ssat[i].resp[j]=rtk->ssat[i].resc[j]=0.0;
-    }
+    //for (i=0;i<MAXSAT;i++) for (j=0;j<NFREQ;j++) {
+      //  rtk->ssat[i].resp[j]=rtk->ssat[i].resc[j]=0.0;
+    //}
     /* compute factors of ionospheric and tropospheric delay
            - only used if kalman filter contains states for ION and TROP delays
            usually insignificant for short baselines (<10km)*/
@@ -1534,8 +1533,8 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 }
                 
                 /* save residuals */
-                if (code) rtk->ssat[sat[j]-1].resp[frq]=v[nv];  /* pseudorange */
-                else      rtk->ssat[sat[j]-1].resc[frq]=v[nv];  /* carrier phase */
+                //if (code) rtk->ssat[sat[j]-1].resp[frq]=v[nv];  /* pseudorange */
+                //else      rtk->ssat[sat[j]-1].resc[frq]=v[nv];  /* carrier phase */
 
                 /* open up outlier threshold if one of the phase biases was just initialized */
                 threshadj=(get_RTK_P(ii+rtk->nx*ii)==SQR(rtk->opt.std[0]))||
@@ -1552,11 +1551,11 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 /* single-differenced measurement error variances (m) */
                 Ri[nv] = varerr(sat[i], sysi, azel[1+iu[i]*2],
                                 SNR_UNIT*rtk->ssat[sat[i]-1].snr_rover[frq],
-                                SNR_UNIT*rtk->ssat[sat[i]-1].snr_base[frq],
+                                SNR_UNIT*rtk->ssat[sat[i]-1].snr_rover[frq],
                                 bl,dt,f,opt,&obs[iu[i]]);
                 Rj[nv] = varerr(sat[j], sysj, azel[1+iu[j]*2], 
                                 SNR_UNIT*rtk->ssat[sat[j]-1].snr_rover[frq],
-                                SNR_UNIT*rtk->ssat[sat[j]-1].snr_base[frq],
+                                SNR_UNIT*rtk->ssat[sat[j]-1].snr_rover[frq],
                                 bl,dt,f,opt,&obs[iu[j]]);
             
                 /* set valid data flags */
@@ -2271,7 +2270,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         for (j=0;j<NFREQ;j++) {
             rtk->ssat[i].vsat[j]=0;  /* valid satellite */
                 rtk->ssat[i].snr_rover[j]=0;
-                rtk->ssat[i].snr_base[j] =0;
+                //rtk->ssat[i].snr_base[j] =0;
         }
     }
     /* compute satellite positions, velocities and clocks for base and rover */
@@ -2309,7 +2308,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         
         /* snr of base and rover receiver */
         rtk->ssat[sat[i]-1].snr_rover[j]=obs[iu[i]].SNR[j];
-        rtk->ssat[sat[i]-1].snr_base[j] =obs[ir[i]].SNR[j]; 
+        //rtk->ssat[sat[i]-1].snr_base[j] =obs[ir[i]].SNR[j]; 
     }
     
     /* initialize Pp,xa to zero, xp to rtk->x */
@@ -2496,7 +2495,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     for (i=0;i<MAXSAT;i++) for (j=0;j<nf;j++) {
         /* Don't lose track of which sats were used to try and resolve the ambiguities */
         /* if (rtk->ssat[i].fix[j]==2&&stat!=SOLQ_FIX) rtk->ssat[i].fix[j]=1; */
-        if (rtk->ssat[i].slip[j]&1) rtk->ssat[i].slipc[j]++;
+        //if (rtk->ssat[i].slip[j]&1) rtk->ssat[i].slipc[j]++;
         /* inc lock count if this sat used for good fix */
         if (!rtk->ssat[i].vsat[j]) continue;
         if (rtk->ssat[i].lock[j]<0||(rtk->nfix>0&&rtk->ssat[i].fix[j]>=2))
@@ -2710,7 +2709,7 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
         } else solb.time=obs[nu].time;
         //trace(3,"basex= %.3f %.3f\n",rtk->rb[0],solb.rr[0]);
 
-        rtk->sol.age=(float)timediff(rtk->sol.time, (obs + nu)[0].time);
+        rtk->sol.age=(float)timediff(rtk->sol.time, obs[nu].time);
 
         if (fabs(rtk->sol.age)>MIN(TTOL_MOVEB,opt->maxtdiff)) {
             rtklib_debug(4, "time sync error for moving-base (age=%.1f)\n",rtk->sol.age);

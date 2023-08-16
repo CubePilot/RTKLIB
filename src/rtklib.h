@@ -857,7 +857,7 @@ typedef struct {        /* navigation data type */
     int glo_fcn[32];    /* GLONASS FCN + 8 */
     double cbias[MAXSAT][3]; /* satellite DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */
     double rbias[MAXRCV][2][3]; /* receiver DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */
-    pcv_t pcvs[MAXSAT]; /* satellite antenna pcv */
+    //pcv_t pcvs[MAXSAT]; /* satellite antenna pcv */
     // sbssat_t sbssat;    /* SBAS satellite corrections */
     // sbsion_t sbsion[MAXBAND+1]; /* SBAS ionosphere corrections */
     // dgps_t dgps[MAXSAT]; /* DGPS corrections */
@@ -1147,22 +1147,23 @@ typedef struct {        /* satellite status type */
     uint8_t sys;        /* navigation system */
     uint8_t vs;         /* valid satellite flag single */
     float azel[2];     /* azimuth/elevation angles {az,el} (rad) */
-    double resp[NFREQ]; /* residuals of pseudorange (m) */
-    double resc[NFREQ]; /* residuals of carrier-phase (m) */
+    //double resp[NFREQ]; /* residuals of pseudorange (m) */
+    //double resc[NFREQ]; /* residuals of carrier-phase (m) */
     double icbias[NFREQ];  /* glonass IC bias (cycles) */
     uint8_t vsat[NFREQ]; /* valid satellite flag */
     uint16_t snr_rover [NFREQ]; /* rover signal strength (0.25 dBHz) */
-    uint16_t snr_base  [NFREQ]; /* base signal strength (0.25 dBHz) */
+    //uint16_t snr_base  [NFREQ]; /* base signal strength (0.25 dBHz) */
     uint8_t fix [NFREQ]; /* ambiguity fix flag (1:float,2:fix,3:hold) */
     uint8_t slip[NFREQ]; /* cycle-slip flag */
-    uint8_t half[NFREQ]; /* half-cycle valid flag */
+    //uint8_t half[NFREQ]; /* half-cycle valid flag */
     int lock [NFREQ];   /* lock counter of phase */
     uint32_t outc [NFREQ]; /* obs outage counter of phase */
-    uint32_t slipc[NFREQ]; /* cycle-slip counter */
+    //uint32_t slipc[NFREQ]; /* cycle-slip counter */
     uint32_t rejc [NFREQ]; /* reject counter */
     //double gf[NFREQ]; /* geometry-free phase (m) */
     //double mw[NFREQ]; /* MW-LC (m) */
     //double phw;         /* phase windup (cycle) */
+    // cycle slip detection
     gtime_t pt[2][NFREQ]; /* previous carrier-phase time */
     double  ph[2][NFREQ]; /* previous carrier-phase observable (cycle) */
 } ssat_t;

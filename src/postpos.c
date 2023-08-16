@@ -652,7 +652,7 @@ static void readpreceph(char **infile, int n, const prcopt_t *prcopt,
     /* read precise ephemeris files */
     for (i=0;i<n;i++) {
         if (strstr(infile[i],"%r")||strstr(infile[i],"%b")) continue;
-        readsp3(infile[i],nav,0);
+        //readsp3(infile[i],nav,0);
     }
     /* read precise clock files */
     for (i=0;i<n;i++) {
@@ -943,14 +943,14 @@ static void setpcv(gtime_t time, prcopt_t *popt, nav_t *nav, const pcvs_t *pcvs,
     
     /* set satellite antenna parameters */
     for (i=0;i<MAXSAT;i++) {
-        nav->pcvs[i]=pcv0;
+        //nav->pcvs[i]=pcv0;
         if (!(satsys(i+1,NULL)&popt->navsys)) continue;
         if (!(pcv=searchpcv(i+1,"",time,pcvs))) {
             satno2id(i+1,id);
             trace(4,"no satellite antenna pcv: %s\n",id);
             continue;
         }
-        nav->pcvs[i]=*pcv;
+        //nav->pcvs[i]=*pcv;
     }
     for (i=0;i<(mode?2:1);i++) {
         popt->pcvr[i]=pcv0;
@@ -1086,7 +1086,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
     /* read dcb parameters */
     if (*fopt->dcb) {
         reppath(fopt->dcb,path,ts,"","");
-        readdcb(path,&navs,stas);
+        //readdcb(path,&navs,stas);
     } else {
         for (i=0;i<3;i++) {
             for (j=0;j<MAXSAT;j++) navs.cbias[j][i]=0;
