@@ -696,10 +696,10 @@ static void freepreceph(nav_t *nav, sbs_t *sbs)
     //free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
     //free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
     free(sbs->msgs); sbs->msgs=NULL; sbs->n =sbs->nmax =0;
-    for (i=0;i<nav->nt;i++) {
-        //free(nav->tec[i].data);
-        //free(nav->tec[i].rms );
-    }
+    //for (i=0;i<nav->nt;i++) {
+    //    //free(nav->tec[i].data);
+    //    //free(nav->tec[i].rms );
+    //}
     //free(nav->tec ); nav->tec =NULL; nav->nt=nav->ntmax=0;
     
     if (fp_rtcm) fclose(fp_rtcm);
@@ -741,7 +741,7 @@ static int readobsnav(gtime_t ts, gtime_t te, double ti, char **infile,
         trace(1,"\n");
         return 0;
     }
-    if (nav->n<=0&&nav->ng<=0&&nav->ns<=0) {
+    if (nav->n<=0&&nav->ng<=0/*&&nav->ns<=0*/) {
         checkbrk("error : no nav data");
         trace(1,"\n");
         return 0;

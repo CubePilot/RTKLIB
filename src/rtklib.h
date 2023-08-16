@@ -829,11 +829,11 @@ typedef struct {        /* SBAS ionospheric corrections type */
 typedef struct {        /* navigation data type */
     int n,nmax;         /* number of broadcast ephemeris */
     int ng,ngmax;       /* number of glonass ephemeris */
-    int ns,nsmax;       /* number of sbas ephemeris */
-    int ne,nemax;       /* number of precise ephemeris */
-    int nc,ncmax;       /* number of precise clock */
-    int na,namax;       /* number of almanac data */
-    int nt,ntmax;       /* number of tec grid data */
+    //int ns,nsmax;       /* number of sbas ephemeris */
+    //int ne,nemax;       /* number of precise ephemeris */
+    //int nc,ncmax;       /* number of precise clock */
+    //int na,namax;       /* number of almanac data */
+    //int nt,ntmax;       /* number of tec grid data */
     eph_t *eph;         /* GPS/QZS/GAL/BDS/IRN ephemeris */
     geph_t *geph;       /* GLONASS ephemeris */
     //seph_t *seph;       /* SBAS ephemeris */
@@ -843,17 +843,17 @@ typedef struct {        /* navigation data type */
     //tec_t *tec;         /* tec grid data */
     erp_t  erp;         /* earth rotation parameters */
     double utc_gps[8];  /* GPS delta-UTC parameters {A0,A1,Tot,WNt,dt_LS,WN_LSF,DN,dt_LSF} */
-    double utc_glo[8];  /* GLONASS UTC time parameters {tau_C,tau_GPS} */
-    double utc_gal[8];  /* Galileo UTC parameters */
-    double utc_qzs[8];  /* QZS UTC parameters */
-    double utc_cmp[8];  /* BeiDou UTC parameters */
-    double utc_irn[9];  /* IRNSS UTC parameters {A0,A1,Tot,...,dt_LSF,A2} */
-    double utc_sbs[4];  /* SBAS UTC parameters */
+    //double utc_glo[8];  /* GLONASS UTC time parameters {tau_C,tau_GPS} */
+    //double utc_gal[8];  /* Galileo UTC parameters */
+    //double utc_qzs[8];  /* QZS UTC parameters */
+    //double utc_cmp[8];  /* BeiDou UTC parameters */
+    //double utc_irn[9];  /* IRNSS UTC parameters {A0,A1,Tot,...,dt_LSF,A2} */
+    //double utc_sbs[4];  /* SBAS UTC parameters */
     double ion_gps[8];  /* GPS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
-    double ion_gal[4];  /* Galileo iono model parameters {ai0,ai1,ai2,0} */
-    double ion_qzs[8];  /* QZSS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
-    double ion_cmp[8];  /* BeiDou iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
-    double ion_irn[8];  /* IRNSS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+    //double ion_gal[4];  /* Galileo iono model parameters {ai0,ai1,ai2,0} */
+    //double ion_qzs[8];  /* QZSS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+    //double ion_cmp[8];  /* BeiDou iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
+    //double ion_irn[8];  /* IRNSS iono model parameters {a0,a1,a2,a3,b0,b1,b2,b3} */
     int glo_fcn[32];    /* GLONASS FCN + 8 */
     double cbias[MAXSAT][3]; /* satellite DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */
     double rbias[MAXRCV][2][3]; /* receiver DCB (0:P1-P2,1:P1-C1,2:P2-C2) (m) */

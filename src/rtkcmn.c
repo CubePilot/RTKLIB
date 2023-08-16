@@ -2828,7 +2828,7 @@ static void uniqgeph(nav_t *nav)
 *-----------------------------------------------------------------------------*/
 extern void uniqnav(nav_t *nav)
 {
-    trace(3,"uniqnav: neph=%d ngeph=%d nseph=%d\n",nav->n,nav->ng,nav->ns);
+    trace(3,"uniqnav: neph=%d ngeph=%d nseph=%d\n",nav->n,nav->ng,/*nav->ns*/0);
     
     /* unique ephemeris */
     uniqeph (nav);

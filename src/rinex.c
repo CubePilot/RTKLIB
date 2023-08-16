@@ -546,27 +546,27 @@ static void decode_navh(char *buff, nav_t *nav)
             else if (!strncmp(buff,"GPSB",4)) {
                 for (i=0,j=5;i<4;i++,j+=12) nav->ion_gps[i+4]=str2num(buff,j,12);
             }
-            else if (!strncmp(buff,"GAL",3)) {
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_gal[i]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"QZSA",4)) { /* v.3.02 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"QZSB",4)) { /* v.3.02 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i+4]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"BDSA",4)) { /* v.3.02 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"BDSB",4)) { /* v.3.02 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i+4]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"IRNA",4)) { /* v.3.03 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_irn[i]=str2num(buff,j,12);
-            }
-            else if (!strncmp(buff,"IRNB",4)) { /* v.3.03 */
-                for (i=0,j=5;i<4;i++,j+=12) nav->ion_irn[i+4]=str2num(buff,j,12);
-            }
+            //else if (!strncmp(buff,"GAL",3)) {
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_gal[i]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"QZSA",4)) { /* v.3.02 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"QZSB",4)) { /* v.3.02 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_qzs[i+4]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"BDSA",4)) { /* v.3.02 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"BDSB",4)) { /* v.3.02 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_cmp[i+4]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"IRNA",4)) { /* v.3.03 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_irn[i]=str2num(buff,j,12);
+            //}
+            //else if (!strncmp(buff,"IRNB",4)) { /* v.3.03 */
+            //    for (i=0,j=5;i<4;i++,j+=12) nav->ion_irn[i+4]=str2num(buff,j,12);
+            //}
         }
     }
     else if (strstr(label,"TIME SYSTEM CORR"    )) { /* opt ver.3 */
@@ -577,43 +577,43 @@ static void decode_navh(char *buff, nav_t *nav)
                 nav->utc_gps[2]=str2num(buff,38, 7);
                 nav->utc_gps[3]=str2num(buff,45, 5);
             }
-            else if (!strncmp(buff,"GLUT",4)) {
-                nav->utc_glo[0]=-str2num(buff,5,17); /* tau_C */
-            }
-            else if (!strncmp(buff,"GLGP",4)) {
-                nav->utc_glo[1]=str2num(buff, 5,17); /* tau_GPS */
-            }
-            else if (!strncmp(buff,"GAUT",4)) { /* v.3.02 */
-                nav->utc_gal[0]=str2num(buff, 5,17);
-                nav->utc_gal[1]=str2num(buff,22,16);
-                nav->utc_gal[2]=str2num(buff,38, 7);
-                nav->utc_gal[3]=str2num(buff,45, 5);
-            }
-            else if (!strncmp(buff,"QZUT",4)) { /* v.3.02 */
-                nav->utc_qzs[0]=str2num(buff, 5,17);
-                nav->utc_qzs[1]=str2num(buff,22,16);
-                nav->utc_qzs[2]=str2num(buff,38, 7);
-                nav->utc_qzs[3]=str2num(buff,45, 5);
-            }
-            else if (!strncmp(buff,"BDUT",4)) { /* v.3.02 */
-                nav->utc_cmp[0]=str2num(buff, 5,17);
-                nav->utc_cmp[1]=str2num(buff,22,16);
-                nav->utc_cmp[2]=str2num(buff,38, 7);
-                nav->utc_cmp[3]=str2num(buff,45, 5);
-            }
-            else if (!strncmp(buff,"SBUT",4)) { /* v.3.02 */
-                nav->utc_sbs[0]=str2num(buff, 5,17);
-                nav->utc_sbs[1]=str2num(buff,22,16);
-                nav->utc_sbs[2]=str2num(buff,38, 7);
-                nav->utc_sbs[3]=str2num(buff,45, 5);
-            }
-            else if (!strncmp(buff,"IRUT",4)) { /* v.3.03 */
-                nav->utc_irn[0]=str2num(buff, 5,17);
-                nav->utc_irn[1]=str2num(buff,22,16);
-                nav->utc_irn[2]=str2num(buff,38, 7);
-                nav->utc_irn[3]=str2num(buff,45, 5);
-                nav->utc_irn[8]=0.0; /* A2 */
-            }
+            //else if (!strncmp(buff,"GLUT",4)) {
+            //    nav->utc_glo[0]=-str2num(buff,5,17); /* tau_C */
+            //}
+            //else if (!strncmp(buff,"GLGP",4)) {
+            //    nav->utc_glo[1]=str2num(buff, 5,17); /* tau_GPS */
+            //}
+            //else if (!strncmp(buff,"GAUT",4)) { /* v.3.02 */
+            //    nav->utc_gal[0]=str2num(buff, 5,17);
+            //    nav->utc_gal[1]=str2num(buff,22,16);
+            //    nav->utc_gal[2]=str2num(buff,38, 7);
+            //    nav->utc_gal[3]=str2num(buff,45, 5);
+            //}
+            //else if (!strncmp(buff,"QZUT",4)) { /* v.3.02 */
+            //    nav->utc_qzs[0]=str2num(buff, 5,17);
+            //    nav->utc_qzs[1]=str2num(buff,22,16);
+            //    nav->utc_qzs[2]=str2num(buff,38, 7);
+            //    nav->utc_qzs[3]=str2num(buff,45, 5);
+            //}
+            //else if (!strncmp(buff,"BDUT",4)) { /* v.3.02 */
+            //    nav->utc_cmp[0]=str2num(buff, 5,17);
+            //    nav->utc_cmp[1]=str2num(buff,22,16);
+            //    nav->utc_cmp[2]=str2num(buff,38, 7);
+            //    nav->utc_cmp[3]=str2num(buff,45, 5);
+            //}
+            //else if (!strncmp(buff,"SBUT",4)) { /* v.3.02 */
+            //    nav->utc_sbs[0]=str2num(buff, 5,17);
+            //    nav->utc_sbs[1]=str2num(buff,22,16);
+            //    nav->utc_sbs[2]=str2num(buff,38, 7);
+            //    nav->utc_sbs[3]=str2num(buff,45, 5);
+            //}
+            //else if (!strncmp(buff,"IRUT",4)) { /* v.3.03 */
+            //    nav->utc_irn[0]=str2num(buff, 5,17);
+            //    nav->utc_irn[1]=str2num(buff,22,16);
+            //    nav->utc_irn[2]=str2num(buff,38, 7);
+            //    nav->utc_irn[3]=str2num(buff,45, 5);
+            //    nav->utc_irn[8]=0.0; /* A2 */
+            //}
         }
     }
     else if (strstr(label,"LEAP SECONDS"        )) { /* opt */
@@ -1497,62 +1497,62 @@ static int readrnxnav(FILE *fp, const char *opt, double ver, int sys,
             if (!stat) return 0;
         }
     }
-    return nav->n>0||nav->ng>0||nav->ns>0;
+    return nav->n>0||nav->ng>0/*||nav->ns>0*/;
 }
 /* read RINEX clock ----------------------------------------------------------*/
-static int readrnxclk(FILE *fp, const char *opt, int index, nav_t *nav)
-{
-    //pclk_t *nav_pclk;
-    //gtime_t time;
-    //double data[2];
-    //int i,j,sat,mask;
-    //char buff[MAXRNXLEN],satid[8]="";
-    //
-    //trace(3,"readrnxclk: index=%d\n", index);
-    //
-    //if (!nav) return 0;
-    //
-    ///* set system mask */
-    //mask=set_sysmask(opt);
-    //
-    //while (fgets(buff,sizeof(buff),fp)) {
-    //    
-    //    if (str2time(buff,8,26,&time)) {
-    //        trace(2,"rinex clk invalid epoch: %34.34s\n",buff);
-    //        continue;
-    //    }
-    //    memcpy(satid,buff+3,4);
-    //    
-    //    /* only read AS (satellite clock) record */
-    //    if (strncmp(buff,"AS",2)||!(sat=satid2no(satid))) continue;
-    //    
-    //    if (!(satsys(sat,NULL)&mask)) continue;
-    //    
-    //    for (i=0,j=40;i<2;i++,j+=20) data[i]=str2num(buff,j,19);
-    //    
-    //    if (nav->nc>=nav->ncmax) {
-    //        nav->ncmax+=1024;
-    //        if (!(nav_pclk=(pclk_t *)realloc(nav->pclk,sizeof(pclk_t)*(nav->ncmax)))) {
-    //            trace(1,"readrnxclk malloc error: nmax=%d\n",nav->ncmax);
-    //            free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
-    //            return -1;
-    //        }
-    //        nav->pclk=nav_pclk;
-    //    }
-    //    if (nav->nc<=0||fabs(timediff(time,nav->pclk[nav->nc-1].time))>1E-9) {
-    //        nav->nc++;
-    //        nav->pclk[nav->nc-1].time =time;
-    //        nav->pclk[nav->nc-1].index=index;
-    //        for (i=0;i<MAXSAT;i++) {
-    //            nav->pclk[nav->nc-1].clk[i][0]=0.0;
-    //            nav->pclk[nav->nc-1].std[i][0]=0.0f;
-    //        }
-    //    }
-    //    nav->pclk[nav->nc-1].clk[sat-1][0]=data[0];
-    //    nav->pclk[nav->nc-1].std[sat-1][0]=(float)data[1];
-    //}
-    return nav->nc>0;
-}
+//static int readrnxclk(FILE *fp, const char *opt, int index, nav_t *nav)
+//{
+//    //pclk_t *nav_pclk;
+//    //gtime_t time;
+//    //double data[2];
+//    //int i,j,sat,mask;
+//    //char buff[MAXRNXLEN],satid[8]="";
+//    //
+//    //trace(3,"readrnxclk: index=%d\n", index);
+//    //
+//    //if (!nav) return 0;
+//    //
+//    ///* set system mask */
+//    //mask=set_sysmask(opt);
+//    //
+//    //while (fgets(buff,sizeof(buff),fp)) {
+//    //    
+//    //    if (str2time(buff,8,26,&time)) {
+//    //        trace(2,"rinex clk invalid epoch: %34.34s\n",buff);
+//    //        continue;
+//    //    }
+//    //    memcpy(satid,buff+3,4);
+//    //    
+//    //    /* only read AS (satellite clock) record */
+//    //    if (strncmp(buff,"AS",2)||!(sat=satid2no(satid))) continue;
+//    //    
+//    //    if (!(satsys(sat,NULL)&mask)) continue;
+//    //    
+//    //    for (i=0,j=40;i<2;i++,j+=20) data[i]=str2num(buff,j,19);
+//    //    
+//    //    if (nav->nc>=nav->ncmax) {
+//    //        nav->ncmax+=1024;
+//    //        if (!(nav_pclk=(pclk_t *)realloc(nav->pclk,sizeof(pclk_t)*(nav->ncmax)))) {
+//    //            trace(1,"readrnxclk malloc error: nmax=%d\n",nav->ncmax);
+//    //            free(nav->pclk); nav->pclk=NULL; nav->nc=nav->ncmax=0;
+//    //            return -1;
+//    //        }
+//    //        nav->pclk=nav_pclk;
+//    //    }
+//    //    if (nav->nc<=0||fabs(timediff(time,nav->pclk[nav->nc-1].time))>1E-9) {
+//    //        nav->nc++;
+//    //        nav->pclk[nav->nc-1].time =time;
+//    //        nav->pclk[nav->nc-1].index=index;
+//    //        for (i=0;i<MAXSAT;i++) {
+//    //            nav->pclk[nav->nc-1].clk[i][0]=0.0;
+//    //            nav->pclk[nav->nc-1].std[i][0]=0.0f;
+//    //        }
+//    //    }
+//    //    nav->pclk[nav->nc-1].clk[sat-1][0]=data[0];
+//    //    nav->pclk[nav->nc-1].std[sat-1][0]=(float)data[1];
+//    //}
+//    return nav->nc>0;
+//}
 /* read RINEX file -----------------------------------------------------------*/
 static int readrnxfp(FILE *fp, gtime_t ts, gtime_t te, double tint,
                      const char *opt, int flag, int index, char *type,
@@ -1579,7 +1579,7 @@ static int readrnxfp(FILE *fp, gtime_t ts, gtime_t te, double tint,
         case 'H': return readrnxnav(fp,opt,ver,SYS_SBS,nav);
         case 'J': return readrnxnav(fp,opt,ver,SYS_QZS,nav); /* extension */
         case 'L': return readrnxnav(fp,opt,ver,SYS_GAL,nav); /* extension */
-        case 'C': return readrnxclk(fp,opt,index,nav);
+        //case 'C': return readrnxclk(fp,opt,index,nav);
     }
     trace(2,"unsupported rinex type ver=%.2f type=%c\n",ver,*type);
     return 0;
@@ -1743,40 +1743,40 @@ static void combpclk(nav_t *nav)
 *          nav_t *nav    IO     navigation data    (NULL: no input)
 * return : number of precise clock
 *-----------------------------------------------------------------------------*/
-extern int readrnxc(const char *file, nav_t *nav)
-{
-    gtime_t t={0};
-    int i,n,index=0,stat=1;
-    char *files[MAXEXFILE]={0},type;
-    
-    trace(3,"readrnxc: file=%s\n",file);
-    
-    for (i=0;i<MAXEXFILE;i++) {
-        if (!(files[i]=(char *)malloc(1024))) {
-            for (i--;i>=0;i--) free(files[i]);
-            return 0;
-        }
-    }
-    /* expand wild-card */
-    n=expath(file,files,MAXEXFILE);
-    
-    /* read rinex clock files */
-    for (i=0;i<n;i++) {
-        if (readrnxfile(files[i],t,t,0.0,"",1,index++,&type,NULL,nav,NULL)) {
-            continue;
-        }
-        stat=0;
-        break;
-    }
-    for (i=0;i<MAXEXFILE;i++) free(files[i]);
-    
-    if (!stat) return 0;
-    
-    /* unique and combine ephemeris and precise clock */
-    combpclk(nav);
-    
-    return nav->nc;
-}
+//extern int readrnxc(const char *file, nav_t *nav)
+//{
+//    gtime_t t={0};
+//    int i,n,index=0,stat=1;
+//    char *files[MAXEXFILE]={0},type;
+//    
+//    trace(3,"readrnxc: file=%s\n",file);
+//    
+//    for (i=0;i<MAXEXFILE;i++) {
+//        if (!(files[i]=(char *)malloc(1024))) {
+//            for (i--;i>=0;i--) free(files[i]);
+//            return 0;
+//        }
+//    }
+//    /* expand wild-card */
+//    n=expath(file,files,MAXEXFILE);
+//    
+//    /* read rinex clock files */
+//    for (i=0;i<n;i++) {
+//        if (readrnxfile(files[i],t,t,0.0,"",1,index++,&type,NULL,nav,NULL)) {
+//            continue;
+//        }
+//        stat=0;
+//        break;
+//    }
+//    for (i=0;i<MAXEXFILE;i++) free(files[i]);
+//    
+//    if (!stat) return 0;
+//    
+//    /* unique and combine ephemeris and precise clock */
+//    combpclk(nav);
+//    
+//    return nav->nc;
+//}
 /* initialize RINEX control ----------------------------------------------------
 * initialize RINEX control struct and reallocate memory for observation and
 * ephemeris buffer in RINEX control struct
@@ -1814,7 +1814,7 @@ extern int init_rnxctr(rnxctr_t *rnx)
     rnx->obs.n=0;
     rnx->nav.n=MAXSAT*2;
     rnx->nav.ng=NSATGLO;
-    rnx->nav.ns=NSATSBS*2;
+    /*rnx->nav.ns=NSATSBS*2;*/
     for (i=0;i<MAXOBS   ;i++) rnx->obs.data[i]=data0;
     for (i=0;i<MAXSAT*2 ;i++) rnx->nav.eph [i]=eph0;
     for (i=0;i<NSATGLO  ;i++) rnx->nav.geph[i]=geph0;
@@ -2428,18 +2428,18 @@ static void out_iono(FILE *fp, int sys, const rnxopt_t *opt, const nav_t *nav)
         if (opt->rnxver<=211) out_iono_sys(fp,"",nav->ion_gps,8);
         else out_iono_sys(fp,"GPS",nav->ion_gps,8);
     }
-    if ((sys&opt->navsys&SYS_GAL)&&opt->rnxver>=212) {
-        out_iono_sys(fp,"GAL",nav->ion_gal,3);
-    }
-    if ((sys&opt->navsys&SYS_QZS)&&opt->rnxver>=302) {
-        out_iono_sys(fp,"QZS",nav->ion_qzs,8);
-    }
-    if ((sys&opt->navsys&SYS_CMP)&&opt->rnxver>=302) {
-        out_iono_sys(fp,"BDS",nav->ion_cmp,8);
-    }
-    if ((sys&opt->navsys&SYS_IRN)&&opt->rnxver>=303) {
-        out_iono_sys(fp,"IRN",nav->ion_irn,8);
-    }
+    //if ((sys&opt->navsys&SYS_GAL)&&opt->rnxver>=212) {
+    //    out_iono_sys(fp,"GAL",nav->ion_gal,3);
+    //}
+    //if ((sys&opt->navsys&SYS_QZS)&&opt->rnxver>=302) {
+    //    out_iono_sys(fp,"QZS",nav->ion_qzs,8);
+    //}
+    //if ((sys&opt->navsys&SYS_CMP)&&opt->rnxver>=302) {
+    //    out_iono_sys(fp,"BDS",nav->ion_cmp,8);
+    //}
+    //if ((sys&opt->navsys&SYS_IRN)&&opt->rnxver>=303) {
+    //    out_iono_sys(fp,"IRN",nav->ion_irn,8);
+    //}
 }
 /* output time system correction for a system --------------------------------*/
 static void out_time_sys(FILE *fp, const char *sys, const double *utc)
@@ -2472,26 +2472,26 @@ static void out_time(FILE *fp, int sys, const rnxopt_t *opt, const nav_t *nav)
         if (opt->rnxver<=211) out_time_sys(fp,"",nav->utc_gps);
         else out_time_sys(fp,"GPUT",nav->utc_gps);
     }
-    if ((sys&opt->navsys&SYS_GLO)&&opt->rnxver>=212) {
-        /* RINEX 2.12-3.02: tau_C, 3.03- : -tau_C */
-        utc[0]=(opt->rnxver<=302)?nav->utc_glo[0]:-nav->utc_glo[0];
-        out_time_sys(fp,"GLUT",utc);
-    }
-    if ((sys&opt->navsys&SYS_SBS)&&opt->rnxver>=212) {
-        out_time_sys(fp,"SBUT",nav->utc_sbs);
-    }
-    if ((sys&opt->navsys&SYS_GAL)&&opt->rnxver>=212) {
-        out_time_sys(fp,"GAUT",nav->utc_gal);
-    }
-    if ((sys&opt->navsys&SYS_QZS)&&opt->rnxver>=302) {
-        out_time_sys(fp,"QZUT",nav->utc_qzs);
-    }
-    if ((sys&opt->navsys&SYS_CMP)&&opt->rnxver>=302) {
-        out_time_sys(fp,"BDUT",nav->utc_cmp);
-    }
-    if ((sys&opt->navsys&SYS_IRN)&&opt->rnxver>=303) {
-        out_time_sys(fp,"IRUT",nav->utc_irn);
-    }
+    //if ((sys&opt->navsys&SYS_GLO)&&opt->rnxver>=212) {
+    //    /* RINEX 2.12-3.02: tau_C, 3.03- : -tau_C */
+    //    utc[0]=(opt->rnxver<=302)?nav->utc_glo[0]:-nav->utc_glo[0];
+    //    out_time_sys(fp,"GLUT",utc);
+    //}
+    //if ((sys&opt->navsys&SYS_SBS)&&opt->rnxver>=212) {
+    //    out_time_sys(fp,"SBUT",nav->utc_sbs);
+    //}
+    //if ((sys&opt->navsys&SYS_GAL)&&opt->rnxver>=212) {
+    //    out_time_sys(fp,"GAUT",nav->utc_gal);
+    //}
+    //if ((sys&opt->navsys&SYS_QZS)&&opt->rnxver>=302) {
+    //    out_time_sys(fp,"QZUT",nav->utc_qzs);
+    //}
+    //if ((sys&opt->navsys&SYS_CMP)&&opt->rnxver>=302) {
+    //    out_time_sys(fp,"BDUT",nav->utc_cmp);
+    //}
+    //if ((sys&opt->navsys&SYS_IRN)&&opt->rnxver>=303) {
+    //    out_time_sys(fp,"IRUT",nav->utc_irn);
+    //}
 }
 /* output leap seconds -------------------------------------------------------*/
 static void out_leaps(FILE *fp, int sys, const rnxopt_t *opt, const nav_t *nav)
@@ -2502,10 +2502,10 @@ static void out_leaps(FILE *fp, int sys, const rnxopt_t *opt, const nav_t *nav)
     if (!opt->outleaps) return;
 
     switch (sys) {
-        case SYS_GAL: leaps=nav->utc_gal+4; break;
-        case SYS_QZS: leaps=nav->utc_qzs+4; break;
-        case SYS_CMP: leaps=nav->utc_cmp+4; break;
-        case SYS_IRN: leaps=nav->utc_irn+4; break;
+        //case SYS_GAL: leaps=nav->utc_gal+4; break;
+        //case SYS_QZS: leaps=nav->utc_qzs+4; break;
+        //case SYS_CMP: leaps=nav->utc_cmp+4; break;
+        //case SYS_IRN: leaps=nav->utc_irn+4; break;
         default     : leaps=nav->utc_gps+4; break;
     }
     if (leaps[0]==0.0) return;
