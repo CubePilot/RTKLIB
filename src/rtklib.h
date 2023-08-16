@@ -1211,15 +1211,15 @@ typedef struct {        /* receiver raw data control type */
     sta_t sta;          /* station parameters */
     int ephsat;         /* update satelle of ephemeris (0:no satellite) */
     int ephset;         /* update set of ephemeris (0-1) */
-    sbsmsg_t sbsmsg;    /* SBAS message */
+    //sbsmsg_t sbsmsg;    /* SBAS message */
     char msgtype[256];  /* last message type */
-    uint8_t subfrm[MAXSAT][380]; /* subframe buffer */
+    uint8_t subfrm[MAXSAT][38 * 5]; /* subframe buffer */
     double lockt[MAXSAT][NFREQ+NEXOBS]; /* lock time (s) */
     unsigned char lockflag[MAXSAT][NFREQ+NEXOBS]; /* used for carrying forward cycle slip */
-    double icpp[MAXSAT],off[MAXSAT],icpc; /* carrier params for ss2 */
-    double prCA[MAXSAT],dpCA[MAXSAT]; /* L1/CA pseudrange/doppler for javad */
+    //double icpp[MAXSAT],off[MAXSAT],icpc; /* carrier params for ss2 */
+    //double prCA[MAXSAT],dpCA[MAXSAT]; /* L1/CA pseudrange/doppler for javad */
     uint8_t halfc[MAXSAT][NFREQ+NEXOBS]; /* half-cycle resolved */
-    char freqn[MAXOBS]; /* frequency number for javad */
+    //char freqn[MAXOBS]; /* frequency number for javad */
     int nbyte;          /* number of bytes in message buffer */ 
     int len;            /* message length (bytes) */
     int iod;            /* issue of data */

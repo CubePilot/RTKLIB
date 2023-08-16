@@ -1087,7 +1087,7 @@ static int decode_gnav(raw_t *raw, int sat, int off, int frq)
 /* decode SBAS navigation data -----------------------------------------------*/
 static int decode_snav(raw_t *raw, int prn, int off)
 {
-    int i,tow,week;
+ /*   int i,tow,week;
     uint8_t *p=raw->buff+6+off,buff[32];
     
     if (raw->len<40+off) {
@@ -1102,7 +1102,7 @@ static int decode_snav(raw_t *raw, int prn, int off)
         setbitu(buff,32*i,32,U4(p));
     }
     memcpy(raw->sbsmsg.msg,buff,29);
-    raw->sbsmsg.msg[28]&=0xC0;
+    raw->sbsmsg.msg[28]&=0xC0;*/
     return 3;
 }
 /* decode UBX-RXM-SFRBX: raw subframe data (ref [3][4][5]) -------------------*/
@@ -1139,7 +1139,7 @@ static int decode_rxmsfrbx(raw_t *raw)
         case SYS_GAL: return decode_enav(raw,sat,8);
         case SYS_CMP: return decode_cnav(raw,sat,8);
         case SYS_GLO: return decode_gnav(raw,sat,8,U1(p+3));
-        case SYS_SBS: return decode_snav(raw,prn,8);
+        //case SYS_SBS: return decode_snav(raw,prn,8);
     }
     return 0;
 }

@@ -1281,7 +1281,7 @@ extern int decode_frame(const uint8_t *buff, eph_t *eph, alm_t *alm,
     trace(4,"decode_frame:\n");
     
     if (eph&&!decode_frame_eph(buff,eph)) return 0;
-    if (alm&&!decode_frame_alm(buff,alm)) return 0;
+    //if (alm&&!decode_frame_alm(buff,alm)) return 0;
     if (ion&&!decode_frame_ion(buff,ion)) return 0;
     if (utc&&!decode_frame_utc(buff,utc)) return 0;
     return 1;
@@ -1308,8 +1308,8 @@ extern int init_raw(raw_t *raw, int format)
     
     raw->time=time0;
     raw->ephset=raw->ephsat=0;
-    raw->sbsmsg=sbsmsg0;
-    raw->msgtype[0]='\0';
+    //raw->sbsmsg=sbsmsg0;
+    //raw->msgtype[0]='\0';
     for (i=0;i<MAXSAT;i++) {
         for (j=0;j<380;j++) raw->subfrm[i][j]=0;
         for (j=0;j<NFREQ+NEXOBS;j++) {
@@ -1317,10 +1317,10 @@ extern int init_raw(raw_t *raw, int format)
             raw->lockt[i][j]=0.0;
             raw->halfc[i][j]=0;
         }
-        raw->icpp[i]=raw->off[i]=raw->prCA[i]=raw->dpCA[i]=0.0;
+        //raw->icpp[i]=raw->off[i]=raw->prCA[i]=raw->dpCA[i]=0.0;
     }
-    for (i=0;i<MAXOBS;i++) raw->freqn[i]=0;
-    raw->icpc=0.0;
+    //for (i=0;i<MAXOBS;i++) raw->freqn[i]=0;
+    //raw->icpc=0.0;
     raw->nbyte=raw->len=0;
     raw->iod=raw->flag=raw->tbase=raw->outtype=0;
     raw->tod=-1;

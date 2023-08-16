@@ -1145,38 +1145,38 @@ static void convnav(FILE **ofp, rnxopt_t *opt, strfile_t *str, int *n)
 static void convsbs(FILE **ofp, rnxopt_t *opt, strfile_t *str, int *n,
                     gtime_t *tend)
 {
-    gtime_t time;
-    int prn,sat,sys,sep_nav=opt->rnxver<=299||opt->sep_nav;
-    
-    trace(3,"convsbs :\n");
-    
-    time=gpst2time(str->raw.sbsmsg.week,str->raw.sbsmsg.tow);
+    //gtime_t time;
+    //int prn,sat,sys,sep_nav=opt->rnxver<=299||opt->sep_nav;
+    //
+    //trace(3,"convsbs :\n");
+    //
+    //time=gpst2time(str->raw.sbsmsg.week,str->raw.sbsmsg.tow);
 
-    if (!screent(time,opt->ts,opt->te,0.0)) return;
-    
-    /* avoid duplicated data by multiple files handover */
-    if (tend->time&&timediff(time,*tend)<opt->ttol) return;
-    *tend=time;
+    //if (!screent(time,opt->ts,opt->te,0.0)) return;
+    //
+    ///* avoid duplicated data by multiple files handover */
+    //if (tend->time&&timediff(time,*tend)<opt->ttol) return;
+    //*tend=time;
 
-    prn=str->raw.sbsmsg.prn;
-    if (MINPRNSBS<=prn&&prn<=MAXPRNSBS) {
-        sys=SYS_SBS;
-    }
-    else if (MINPRNQZS_S<=prn&&prn<=MAXPRNQZS_S) {
-        sys=SYS_QZS;
-        prn+=10;
-    }
-    else {
-        trace(2,"sbas message satellite error: prn=%d\n",prn);
-        return;
-    }
-    if (!(sat=satno(sys,prn))||opt->exsats[sat-1]==1) return;
-    
-    /* output SBAS message log */
-    if (ofp[NOUTFILE-1]) {
-        //sbsoutmsg(ofp[NOUTFILE-1],&str->raw.sbsmsg);
-        n[NOUTFILE-1]++;
-    }
+    //prn=str->raw.sbsmsg.prn;
+    //if (MINPRNSBS<=prn&&prn<=MAXPRNSBS) {
+    //    sys=SYS_SBS;
+    //}
+    //else if (MINPRNQZS_S<=prn&&prn<=MAXPRNQZS_S) {
+    //    sys=SYS_QZS;
+    //    prn+=10;
+    //}
+    //else {
+    //    trace(2,"sbas message satellite error: prn=%d\n",prn);
+    //    return;
+    //}
+    //if (!(sat=satno(sys,prn))||opt->exsats[sat-1]==1) return;
+    //
+    ///* output SBAS message log */
+    //if (ofp[NOUTFILE-1]) {
+    //    //sbsoutmsg(ofp[NOUTFILE-1],&str->raw.sbsmsg);
+    //    n[NOUTFILE-1]++;
+    //}
     /* output SBAS ephemeris */
     //if ((opt->navsys&SYS_SBS)&&sbsupdatecorr(&str->raw.sbsmsg,str->nav)==9) {
     //    
