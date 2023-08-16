@@ -97,7 +97,7 @@ extern int init_rtcm(rtcm_t *rtcm)
         rtcm->lltime[i][j]=time0;
     }
     rtcm->nbyte=rtcm->nbit=rtcm->len=0;
-    rtcm->word=0;
+    //rtcm->word=0;
     //for (i=0;i<100;i++) rtcm->nmsg2[i]=0;
     //for (i=0;i<400;i++) rtcm->nmsg3[i]=0;
     
@@ -151,43 +151,43 @@ extern void free_rtcm(rtcm_t *rtcm)
 *-----------------------------------------------------------------------------*/
 extern int input_rtcm2(rtcm_t *rtcm, uint8_t data)
 {
-    uint8_t preamb;
-    int i;
-    
-    trace(5,"input_rtcm2: data=%02x\n",data);
-    
-    if ((data&0xC0)!=0x40) return 0; /* ignore if upper 2bit != 01 */
-    
-    for (i=0;i<6;i++,data>>=1) { /* decode 6-of-8 form */
-        rtcm->word=(rtcm->word<<1)+(data&1);
-        
-        /* synchronize frame */
-        if (rtcm->nbyte==0) {
-            preamb=(uint8_t)(rtcm->word>>22);
-            if (rtcm->word&0x40000000) preamb^=0xFF; /* decode preamble */
-            if (preamb!=RTCM2PREAMB) continue;
-            
-            /* check parity */
-            if (!decode_word(rtcm->word,rtcm->buff)) continue;
-            rtcm->nbyte=3; rtcm->nbit=0;
-            continue;
-        }
-        if (++rtcm->nbit<30) continue; else rtcm->nbit=0;
-        
-        /* check parity */
-        if (!decode_word(rtcm->word,rtcm->buff+rtcm->nbyte)) {
-            trace(2,"rtcm2 partity error: i=%d word=%08x\n",i,rtcm->word);
-            rtcm->nbyte=0; rtcm->word&=0x3;
-            continue;
-        }
-        rtcm->nbyte+=3;
-        if (rtcm->nbyte==6) rtcm->len=(rtcm->buff[5]>>3)*3+6;
-        if (rtcm->nbyte<rtcm->len) continue;
-        rtcm->nbyte=0; rtcm->word&=0x3;
-        
-        /* decode rtcm2 message */
-        return 0;//decode_rtcm2(rtcm);
-    }
+    //uint8_t preamb;
+    //int i;
+    //
+    //trace(5,"input_rtcm2: data=%02x\n",data);
+    //
+    //if ((data&0xC0)!=0x40) return 0; /* ignore if upper 2bit != 01 */
+    //
+    //for (i=0;i<6;i++,data>>=1) { /* decode 6-of-8 form */
+    //    rtcm->word=(rtcm->word<<1)+(data&1);
+    //    
+    //    /* synchronize frame */
+    //    if (rtcm->nbyte==0) {
+    //        preamb=(uint8_t)(rtcm->word>>22);
+    //        if (rtcm->word&0x40000000) preamb^=0xFF; /* decode preamble */
+    //        if (preamb!=RTCM2PREAMB) continue;
+    //        
+    //        /* check parity */
+    //        if (!decode_word(rtcm->word,rtcm->buff)) continue;
+    //        rtcm->nbyte=3; rtcm->nbit=0;
+    //        continue;
+    //    }
+    //    if (++rtcm->nbit<30) continue; else rtcm->nbit=0;
+    //    
+    //    /* check parity */
+    //    if (!decode_word(rtcm->word,rtcm->buff+rtcm->nbyte)) {
+    //        trace(2,"rtcm2 partity error: i=%d word=%08x\n",i,rtcm->word);
+    //        rtcm->nbyte=0; rtcm->word&=0x3;
+    //        continue;
+    //    }
+    //    rtcm->nbyte+=3;
+    //    if (rtcm->nbyte==6) rtcm->len=(rtcm->buff[5]>>3)*3+6;
+    //    if (rtcm->nbyte<rtcm->len) continue;
+    //    rtcm->nbyte=0; rtcm->word&=0x3;
+    //    
+    //    /* decode rtcm2 message */
+    //    return 0;//decode_rtcm2(rtcm);
+    //}
     return 0;
 }
 /* input RTCM 3 message from stream --------------------------------------------
