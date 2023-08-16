@@ -933,6 +933,16 @@ typedef struct {        /* solution status buffer type */
     solstat_t *data;    /* solution status data */
 } solstatbuf_t;
 
+typedef struct {
+  //  eph_t* eph;         /* GPS/QZS/GAL/BDS/IRN ephemeris */
+  //  geph_t* geph;       /* GLONASS ephemeris */
+    int glo_fcn[32]; /* GLONASS frequency channel numbers */
+  //  double utc_gps[8];
+  //  int n, nmax;         /* number of broadcast ephemeris */
+ //   int ng, ngmax;       /* number of glonass ephemeris */
+}
+nav_lean_t;
+
 typedef struct {        /* RTCM control struct type */
     int staid;          /* station id */
     int stah;           /* station health */
@@ -941,7 +951,8 @@ typedef struct {        /* RTCM control struct type */
     gtime_t time;       /* message time */
     gtime_t time_s;     /* message start time */
     obs_t obs;          /* observation data (uncorrected) */
-    nav_t nav;          /* satellite ephemerides */
+    nav_lean_t nav;
+    //nav_t nav;          /* satellite ephemerides */
     sta_t sta;          /* station parameters */
     // dgps_t *dgps;       /* output of dgps corrections */
     // ssr_t ssr[MAXSAT];  /* output of ssr corrections */
@@ -960,8 +971,8 @@ typedef struct {        /* RTCM control struct type */
     int len;            /* message length (bytes) */
     uint8_t buff[1200]; /* message buffer */
     uint32_t word;      /* word buffer for rtcm 2 */
-    uint32_t nmsg2[100]; /* message count of RTCM 2 (1-99:1-99,0:other) */
-    uint32_t nmsg3[400]; /* message count of RTCM 3 (1-299:1001-1299,300-329:4070-4099,0:ohter) */
+    //uint32_t nmsg2[100]; /* message count of RTCM 2 (1-99:1-99,0:other) */
+    //uint32_t nmsg3[400]; /* message count of RTCM 3 (1-299:1001-1299,300-329:4070-4099,0:ohter) */
     char opt[256];      /* RTCM dependent options */
 } rtcm_t;
 

@@ -2051,11 +2051,11 @@ static void outrnx_glo_fcn(FILE *fp, const rnxopt_t *opt, const nav_t *nav)
     if (opt->navsys&SYS_GLO) {
         for (i=0;i<MAXPRNGLO;i++) {
             sat=satno(SYS_GLO,i+1);
-            if (nav->geph[i].sat==sat) {
+         /*   if (nav->geph[i].sat==sat) {
                 prn[n]=i+1;
                 fcn[n++]=nav->geph[i].frq;
             }
-            else if (nav->glo_fcn[i]) {
+            else*/ if (nav->glo_fcn[i]) {
                 prn[n]=i+1;
                 fcn[n++]=nav->glo_fcn[i]-8;
             }

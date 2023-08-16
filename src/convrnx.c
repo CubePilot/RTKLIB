@@ -822,9 +822,9 @@ static int scan_file(char **files, int nf, rnxopt_t *opt, strfile_t *str,
         str->nav->eph[i]=eph0;
     }
     for (i=0;i<str->nav->ng;i++) {
-        if (satsys(str->nav->geph[i].sat,&prn)!=SYS_GLO) continue;
+ /*       if (satsys(str->nav->geph[i].sat,&prn)!=SYS_GLO) continue;
         str->nav->glo_fcn[prn-1]=str->nav->geph[i].frq+8;
-        str->nav->geph[i]=geph0;
+        str->nav->geph[i]=geph0;*/
     }
     //for (i=0;i<str->nav->ns;i++) {
     //    str->nav->seph[i]=seph0;
@@ -1330,7 +1330,7 @@ static int convrnx_s(int sess, int format, rnxopt_t *opt, const char *file,
             }
             /* set approx position in rinex option */
             if (type==1&&!opt->autopos&&norm(opt->apppos,3)<=0.0) {
-                setopt_apppos(str,opt);
+                //setopt_apppos(str,opt);
             }
         }
         /* close stream file */

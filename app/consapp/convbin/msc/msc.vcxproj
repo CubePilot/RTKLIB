@@ -101,13 +101,11 @@
     <ClCompile Include="..\..\..\..\src\ephemeris.c" />
     <ClCompile Include="..\..\..\..\src\pntpos.c" />
     <ClCompile Include="..\..\..\..\src\rcv\rt17.c" />
-    <ClCompile Include="..\..\..\..\src\rtcm3e.c" />
     <ClCompile Include="..\convbin.c" />
     <ClCompile Include="..\..\..\..\src\convrnx.c" />
     <ClCompile Include="..\..\..\..\src\rcvraw.c" />
     <ClCompile Include="..\..\..\..\src\rinex.c" />
     <ClCompile Include="..\..\..\..\src\rtcm.c" />
-    <ClCompile Include="..\..\..\..\src\rtcm2.c" />
     <ClCompile Include="..\..\..\..\src\rtcm3.c" />
     <ClCompile Include="..\..\..\..\src\rtkcmn.c" />
     <ClCompile Include="..\..\..\..\src\rcv\ublox.c" />

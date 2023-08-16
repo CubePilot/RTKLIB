@@ -98,26 +98,27 @@ extern int init_rtcm(rtcm_t *rtcm)
     }
     rtcm->nbyte=rtcm->nbit=rtcm->len=0;
     rtcm->word=0;
-    for (i=0;i<100;i++) rtcm->nmsg2[i]=0;
-    for (i=0;i<400;i++) rtcm->nmsg3[i]=0;
+    //for (i=0;i<100;i++) rtcm->nmsg2[i]=0;
+    //for (i=0;i<400;i++) rtcm->nmsg3[i]=0;
     
     rtcm->obs.data=NULL;
-    rtcm->nav.eph =NULL;
-    rtcm->nav.geph=NULL;
+    //rtcm->nav.eph =NULL;
+    //rtcm->nav.geph=NULL;
     
     /* reallocate memory for observation and ephemeris buffer */
-    if (!(rtcm->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
-        !(rtcm->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2))||
-        !(rtcm->nav.geph=(geph_t *)malloc(sizeof(geph_t)*MAXPRNGLO))) {
+    if (!(rtcm->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS)) //||
+       // !(rtcm->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2))||
+        //!(rtcm->nav.geph=(geph_t *)malloc(sizeof(geph_t)*MAXPRNGLO))
+        ) {
         free_rtcm(rtcm);
         return 0;
     }
     rtcm->obs.n=0;
-    rtcm->nav.n=MAXSAT*2;
-    rtcm->nav.ng=MAXPRNGLO;
+    //rtcm->nav.n=MAXSAT*2;
+    //rtcm->nav.ng=MAXPRNGLO;
     for (i=0;i<MAXOBS   ;i++) rtcm->obs.data[i]=data0;
-    for (i=0;i<MAXSAT*2 ;i++) rtcm->nav.eph [i]=eph0;
-    for (i=0;i<MAXPRNGLO;i++) rtcm->nav.geph[i]=geph0;
+    //for (i=0;i<MAXSAT*2 ;i++) rtcm->nav.eph [i]=eph0;
+    //for (i=0;i<MAXPRNGLO;i++) rtcm->nav.geph[i]=geph0;
     return 1;
 }
 /* free rtcm control ----------------------------------------------------------
@@ -131,8 +132,8 @@ extern void free_rtcm(rtcm_t *rtcm)
     
     /* free memory for observation and ephemeris buffer */
     free(rtcm->obs.data); rtcm->obs.data=NULL; rtcm->obs.n=0;
-    free(rtcm->nav.eph ); rtcm->nav.eph =NULL; rtcm->nav.n=0;
-    free(rtcm->nav.geph); rtcm->nav.geph=NULL; rtcm->nav.ng=0;
+    //free(rtcm->nav.eph ); rtcm->nav.eph =NULL; rtcm->nav.n=0;
+    //free(rtcm->nav.geph); rtcm->nav.geph=NULL; rtcm->nav.ng=0;
 }
 /* input RTCM 2 message from stream --------------------------------------------
 * fetch next RTCM 2 message and input a message from byte stream
@@ -369,9 +370,10 @@ extern int gen_rtcm3(rtcm_t *rtcm, int type, int subtype, int sync)
     setbitu(rtcm->buff,i, 6,0          ); i+= 6;
     setbitu(rtcm->buff,i,10,0          ); i+=10;
     
+    return 0;
     /* encode rtcm 3 message body */
-    if (!encode_rtcm3(rtcm,type,subtype,sync)) 
-        return 0;
+    //if (!encode_rtcm3(rtcm,type,subtype,sync)) 
+      //  return 0;
     
     /* padding to align 8 bit boundary */
     for (i=rtcm->nbit;i%8;i++) {
