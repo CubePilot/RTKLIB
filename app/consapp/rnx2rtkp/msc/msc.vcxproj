@@ -111,7 +111,6 @@
     <ClCompile Include="..\..\..\..\src\pntpos.c" />
     <ClCompile Include="..\..\..\..\src\postpos.c" />
     <ClCompile Include="..\..\..\..\src\rinex.c" />
-    <ClCompile Include="..\..\..\..\src\rtcm3e.c" />
     <ClCompile Include="..\..\..\..\src\tides.c" />
     <ClCompile Include="..\..\..\..\src\rtcm.c" />
     <ClCompile Include="..\..\..\..\src\rtcm3.c" />
